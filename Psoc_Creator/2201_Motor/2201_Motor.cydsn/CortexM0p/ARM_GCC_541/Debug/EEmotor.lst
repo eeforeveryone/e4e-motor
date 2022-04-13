@@ -1,0 +1,2743 @@
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0plus
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"EEmotor.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.EEmotor__init,"ax",%progbits
+  20              		.align	2
+  21              		.global	EEmotor__init
+  22              		.code	16
+  23              		.thumb_func
+  24              		.type	EEmotor__init, %function
+  25              	EEmotor__init:
+  26              	.LFB34:
+  27              		.file 1 "EEmotor.c"
+   1:EEmotor.c     **** /* ========================================
+   2:EEmotor.c     ****  *
+   3:EEmotor.c     ****  * Copyright YOUR COMPANY, THE YEAR
+   4:EEmotor.c     ****  * All Rights Reserved
+   5:EEmotor.c     ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:EEmotor.c     ****  *
+   7:EEmotor.c     ****  * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8:EEmotor.c     ****  * WHICH IS THE PROPERTY OF your company.
+   9:EEmotor.c     ****  *
+  10:EEmotor.c     ****  * ========================================
+  11:EEmotor.c     **** */
+  12:EEmotor.c     **** 
+  13:EEmotor.c     **** #include "EEmotor.h"
+  14:EEmotor.c     **** 
+  15:EEmotor.c     **** /**************STRUCT DEFINITION*************************/
+  16:EEmotor.c     **** 
+  17:EEmotor.c     **** struct EEmotor_PIreg{
+  18:EEmotor.c     ****     float K_P;
+  19:EEmotor.c     ****     float K_I;
+  20:EEmotor.c     ****     float last_error;
+  21:EEmotor.c     ****     float last_Iterm;
+  22:EEmotor.c     ****     float last_control; 
+  23:EEmotor.c     ****     float INPUT_SCALAR;
+  24:EEmotor.c     ****     float OUTPUT_SCALAR;
+  25:EEmotor.c     **** };
+  26:EEmotor.c     **** 
+  27:EEmotor.c     **** 
+  28:EEmotor.c     **** #define SHAPER_OFF 0 //pass through values directly
+  29:EEmotor.c     **** struct EEmotor_Shaper{
+  30:EEmotor.c     ****     uint8_t mode;
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 2
+
+
+  31:EEmotor.c     **** };
+  32:EEmotor.c     **** 
+  33:EEmotor.c     **** struct EEmotor{
+  34:EEmotor.c     ****     
+  35:EEmotor.c     ****     long set_position; //Stores requested position, relative to home
+  36:EEmotor.c     ****     long shaper_out; //stores output of the shaper - used as input for position regulator
+  37:EEmotor.c     ****     long home; //stores "home" offset
+  38:EEmotor.c     ****     uint32_t encoder; //stores current encoder position, in pulses
+  39:EEmotor.c     ****     uint32_t oldMillis;
+  40:EEmotor.c     ****     float output; //stores current motor speed setpoint  //1000 = Full speed forward. -1000 = Full 
+  41:EEmotor.c     ****     
+  42:EEmotor.c     ****     float speed;
+  43:EEmotor.c     ****     long position; //stores current position
+  44:EEmotor.c     ****     
+  45:EEmotor.c     ****     struct EEmotor_PIreg speedReg;
+  46:EEmotor.c     ****     struct EEmotor_PIreg PosReg;
+  47:EEmotor.c     ****     struct EEmotor_Shaper ShaperVars;
+  48:EEmotor.c     ****   
+  49:EEmotor.c     **** };
+  50:EEmotor.c     **** 
+  51:EEmotor.c     **** 
+  52:EEmotor.c     **** 
+  53:EEmotor.c     **** /**************CONSTRUCTORS AND DESTRUCTORS**************/
+  54:EEmotor.c     **** struct EEmotor* EEmotor__create(uint32_t encoderVal){ //constructor
+  55:EEmotor.c     ****     struct EEmotor* result = (struct EEmotor*) malloc(sizeof(struct EEmotor)); //alocate memory, ty
+  56:EEmotor.c     ****     EEmotor__init(result, encoderVal); //initialize variables
+  57:EEmotor.c     ****     return(result);
+  58:EEmotor.c     **** }
+  59:EEmotor.c     **** void EEmotor__init(struct EEmotor *self, uint32_t encoderVal){ //modifier (empty)
+  28              		.loc 1 59 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              	.LVL0:
+  33 0000 10B5     		push	{r4, lr}
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 4, -8
+  36              		.cfi_offset 14, -4
+  60:EEmotor.c     ****     self->encoder = encoderVal;
+  37              		.loc 1 60 0
+  38 0002 C160     		str	r1, [r0, #12]
+  61:EEmotor.c     ****     self->shaper_out = encoderVal;
+  39              		.loc 1 61 0
+  40 0004 4160     		str	r1, [r0, #4]
+  62:EEmotor.c     ****     self->home = encoderVal;
+  41              		.loc 1 62 0
+  42 0006 8160     		str	r1, [r0, #8]
+  63:EEmotor.c     ****     self->set_position = encoderVal;
+  43              		.loc 1 63 0
+  44 0008 0160     		str	r1, [r0]
+  64:EEmotor.c     ****     self->oldMillis = 0;
+  45              		.loc 1 64 0
+  46 000a 0022     		movs	r2, #0
+  47 000c 0261     		str	r2, [r0, #16]
+  65:EEmotor.c     ****     self->output = 0;
+  48              		.loc 1 65 0
+  49 000e 0023     		movs	r3, #0
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 3
+
+
+  50 0010 4361     		str	r3, [r0, #20]
+  66:EEmotor.c     ****     self->speed = 0;
+  51              		.loc 1 66 0
+  52 0012 8361     		str	r3, [r0, #24]
+  67:EEmotor.c     ****     self->position = 0;
+  53              		.loc 1 67 0
+  54 0014 C261     		str	r2, [r0, #28]
+  68:EEmotor.c     ****     
+  69:EEmotor.c     ****     self->speedReg.K_I = 0.0002;
+  55              		.loc 1 69 0
+  56 0016 0D49     		ldr	r1, .L2
+  57              	.LVL1:
+  58 0018 4162     		str	r1, [r0, #36]
+  70:EEmotor.c     ****     self->speedReg.K_P = 1.5;
+  59              		.loc 1 70 0
+  60 001a FF21     		movs	r1, #255
+  61 001c 8905     		lsls	r1, r1, #22
+  62 001e 0162     		str	r1, [r0, #32]
+  71:EEmotor.c     ****     self->speedReg.last_error = 0;
+  63              		.loc 1 71 0
+  64 0020 8362     		str	r3, [r0, #40]
+  72:EEmotor.c     ****     self->speedReg.last_Iterm = 0;
+  65              		.loc 1 72 0
+  66 0022 C362     		str	r3, [r0, #44]
+  73:EEmotor.c     ****     self->speedReg.last_control = 0;
+  67              		.loc 1 73 0
+  68 0024 0363     		str	r3, [r0, #48]
+  74:EEmotor.c     ****     self->speedReg.INPUT_SCALAR = 1;
+  69              		.loc 1 74 0
+  70 0026 FE21     		movs	r1, #254
+  71 0028 8905     		lsls	r1, r1, #22
+  72 002a 4163     		str	r1, [r0, #52]
+  75:EEmotor.c     ****     self->speedReg.OUTPUT_SCALAR = 800; // +/- 800 for 30kHz operation
+  73              		.loc 1 75 0
+  74 002c 084C     		ldr	r4, .L2+4
+  75 002e 8463     		str	r4, [r0, #56]
+  76:EEmotor.c     ****     
+  77:EEmotor.c     ****     self->PosReg.K_I = 0.0001;
+  76              		.loc 1 77 0
+  77 0030 084C     		ldr	r4, .L2+8
+  78 0032 0464     		str	r4, [r0, #64]
+  78:EEmotor.c     ****     self->PosReg.K_P = 3.0;
+  79              		.loc 1 78 0
+  80 0034 084C     		ldr	r4, .L2+12
+  81 0036 C463     		str	r4, [r0, #60]
+  79:EEmotor.c     ****     self->PosReg.last_error = 0;
+  82              		.loc 1 79 0
+  83 0038 4364     		str	r3, [r0, #68]
+  80:EEmotor.c     ****     self->PosReg.last_Iterm = 0;
+  84              		.loc 1 80 0
+  85 003a 8364     		str	r3, [r0, #72]
+  81:EEmotor.c     ****     self->PosReg.last_control = 0;
+  86              		.loc 1 81 0
+  87 003c C364     		str	r3, [r0, #76]
+  82:EEmotor.c     ****     self->PosReg.INPUT_SCALAR = 1.0/1080.0; //Scale 1:1  (For our motor)
+  88              		.loc 1 82 0
+  89 003e 074B     		ldr	r3, .L2+16
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 4
+
+
+  90 0040 0365     		str	r3, [r0, #80]
+  83:EEmotor.c     ****     self->PosReg.OUTPUT_SCALAR = 1; //Scale 1:1
+  91              		.loc 1 83 0
+  92 0042 4165     		str	r1, [r0, #84]
+  84:EEmotor.c     ****     
+  85:EEmotor.c     ****     self->ShaperVars.mode = SHAPER_OFF;
+  93              		.loc 1 85 0
+  94 0044 5823     		movs	r3, #88
+  95 0046 C254     		strb	r2, [r0, r3]
+  96              	.LVL2:
+  86:EEmotor.c     ****     
+  87:EEmotor.c     **** }
+  97              		.loc 1 87 0
+  98              		@ sp needed
+  99 0048 10BD     		pop	{r4, pc}
+ 100              	.L3:
+ 101 004a C046     		.align	2
+ 102              	.L2:
+ 103 004c 17B75139 		.word	961656599
+ 104 0050 00004844 		.word	1145569280
+ 105 0054 17B7D138 		.word	953267991
+ 106 0058 00004040 		.word	1077936128
+ 107 005c D6B9723A 		.word	980597206
+ 108              		.cfi_endproc
+ 109              	.LFE34:
+ 110              		.size	EEmotor__init, .-EEmotor__init
+ 111              		.section	.text.EEmotor__create,"ax",%progbits
+ 112              		.align	2
+ 113              		.global	EEmotor__create
+ 114              		.code	16
+ 115              		.thumb_func
+ 116              		.type	EEmotor__create, %function
+ 117              	EEmotor__create:
+ 118              	.LFB33:
+  54:EEmotor.c     ****     struct EEmotor* result = (struct EEmotor*) malloc(sizeof(struct EEmotor)); //alocate memory, ty
+ 119              		.loc 1 54 0
+ 120              		.cfi_startproc
+ 121              		@ args = 0, pretend = 0, frame = 0
+ 122              		@ frame_needed = 0, uses_anonymous_args = 0
+ 123              	.LVL3:
+ 124 0000 70B5     		push	{r4, r5, r6, lr}
+ 125              		.cfi_def_cfa_offset 16
+ 126              		.cfi_offset 4, -16
+ 127              		.cfi_offset 5, -12
+ 128              		.cfi_offset 6, -8
+ 129              		.cfi_offset 14, -4
+ 130 0002 0500     		movs	r5, r0
+  55:EEmotor.c     ****     EEmotor__init(result, encoderVal); //initialize variables
+ 131              		.loc 1 55 0
+ 132 0004 5C20     		movs	r0, #92
+ 133              	.LVL4:
+ 134 0006 FFF7FEFF 		bl	malloc
+ 135              	.LVL5:
+ 136 000a 0400     		movs	r4, r0
+ 137              	.LVL6:
+  56:EEmotor.c     ****     return(result);
+ 138              		.loc 1 56 0
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 5
+
+
+ 139 000c 2900     		movs	r1, r5
+ 140 000e FFF7FEFF 		bl	EEmotor__init
+ 141              	.LVL7:
+  58:EEmotor.c     **** void EEmotor__init(struct EEmotor *self, uint32_t encoderVal){ //modifier (empty)
+ 142              		.loc 1 58 0
+ 143 0012 2000     		movs	r0, r4
+ 144              		@ sp needed
+ 145              	.LVL8:
+ 146              	.LVL9:
+ 147 0014 70BD     		pop	{r4, r5, r6, pc}
+ 148              		.cfi_endproc
+ 149              	.LFE33:
+ 150              		.size	EEmotor__create, .-EEmotor__create
+ 151 0016 C046     		.section	.text.EEmotor__destroy,"ax",%progbits
+ 152              		.align	2
+ 153              		.global	EEmotor__destroy
+ 154              		.code	16
+ 155              		.thumb_func
+ 156              		.type	EEmotor__destroy, %function
+ 157              	EEmotor__destroy:
+ 158              	.LFB35:
+  88:EEmotor.c     **** 
+  89:EEmotor.c     **** void EEmotor__destroy(struct EEmotor *self){ //destructor
+ 159              		.loc 1 89 0
+ 160              		.cfi_startproc
+ 161              		@ args = 0, pretend = 0, frame = 0
+ 162              		@ frame_needed = 0, uses_anonymous_args = 0
+ 163              	.LVL10:
+ 164 0000 10B5     		push	{r4, lr}
+ 165              		.cfi_def_cfa_offset 8
+ 166              		.cfi_offset 4, -8
+ 167              		.cfi_offset 14, -4
+  90:EEmotor.c     ****     if(self){
+ 168              		.loc 1 90 0
+ 169 0002 0028     		cmp	r0, #0
+ 170 0004 01D0     		beq	.L5
+  91:EEmotor.c     ****     free(self);
+ 171              		.loc 1 91 0
+ 172 0006 FFF7FEFF 		bl	free
+ 173              	.LVL11:
+ 174              	.L5:
+  92:EEmotor.c     ****   }
+  93:EEmotor.c     **** }
+ 175              		.loc 1 93 0
+ 176              		@ sp needed
+ 177 000a 10BD     		pop	{r4, pc}
+ 178              		.cfi_endproc
+ 179              	.LFE35:
+ 180              		.size	EEmotor__destroy, .-EEmotor__destroy
+ 181              		.global	__aeabi_f2iz
+ 182              		.section	.text.EEmotor__getSpeedOutput,"ax",%progbits
+ 183              		.align	2
+ 184              		.global	EEmotor__getSpeedOutput
+ 185              		.code	16
+ 186              		.thumb_func
+ 187              		.type	EEmotor__getSpeedOutput, %function
+ 188              	EEmotor__getSpeedOutput:
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 6
+
+
+ 189              	.LFB36:
+  94:EEmotor.c     **** 
+  95:EEmotor.c     **** 
+  96:EEmotor.c     **** /********************** MEMBER FUNCTIONS *******************/
+  97:EEmotor.c     **** long EEmotor__getSpeedOutput(struct EEmotor *self){
+ 190              		.loc 1 97 0
+ 191              		.cfi_startproc
+ 192              		@ args = 0, pretend = 0, frame = 0
+ 193              		@ frame_needed = 0, uses_anonymous_args = 0
+ 194              	.LVL12:
+ 195 0000 10B5     		push	{r4, lr}
+ 196              		.cfi_def_cfa_offset 8
+ 197              		.cfi_offset 4, -8
+ 198              		.cfi_offset 14, -4
+  98:EEmotor.c     ****   return(self->output);   
+ 199              		.loc 1 98 0
+ 200 0002 4069     		ldr	r0, [r0, #20]
+ 201              	.LVL13:
+ 202 0004 FFF7FEFF 		bl	__aeabi_f2iz
+ 203              	.LVL14:
+  99:EEmotor.c     **** }
+ 204              		.loc 1 99 0
+ 205              		@ sp needed
+ 206 0008 10BD     		pop	{r4, pc}
+ 207              		.cfi_endproc
+ 208              	.LFE36:
+ 209              		.size	EEmotor__getSpeedOutput, .-EEmotor__getSpeedOutput
+ 210 000a C046     		.section	.text.EEmotor__go,"ax",%progbits
+ 211              		.align	2
+ 212              		.global	EEmotor__go
+ 213              		.code	16
+ 214              		.thumb_func
+ 215              		.type	EEmotor__go, %function
+ 216              	EEmotor__go:
+ 217              	.LFB37:
+ 100:EEmotor.c     **** 
+ 101:EEmotor.c     **** void EEmotor__go(struct EEmotor *self, long NewPositionPulses){ //set the new position target
+ 218              		.loc 1 101 0
+ 219              		.cfi_startproc
+ 220              		@ args = 0, pretend = 0, frame = 0
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+ 222              		@ link register save eliminated.
+ 223              	.LVL15:
+ 102:EEmotor.c     ****     self->set_position = NewPositionPulses + self->home; //include home offset
+ 224              		.loc 1 102 0
+ 225 0000 8368     		ldr	r3, [r0, #8]
+ 226 0002 9C46     		mov	ip, r3
+ 227 0004 6144     		add	r1, r1, ip
+ 228              	.LVL16:
+ 229 0006 0160     		str	r1, [r0]
+ 103:EEmotor.c     **** }
+ 230              		.loc 1 103 0
+ 231              		@ sp needed
+ 232 0008 7047     		bx	lr
+ 233              		.cfi_endproc
+ 234              	.LFE37:
+ 235              		.size	EEmotor__go, .-EEmotor__go
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 7
+
+
+ 236 000a C046     		.section	.text.EEmotor__nudge,"ax",%progbits
+ 237              		.align	2
+ 238              		.global	EEmotor__nudge
+ 239              		.code	16
+ 240              		.thumb_func
+ 241              		.type	EEmotor__nudge, %function
+ 242              	EEmotor__nudge:
+ 243              	.LFB38:
+ 104:EEmotor.c     **** 
+ 105:EEmotor.c     **** void EEmotor__nudge(struct EEmotor *self, long pulses_to_nudge){ //set the new position target
+ 244              		.loc 1 105 0
+ 245              		.cfi_startproc
+ 246              		@ args = 0, pretend = 0, frame = 0
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 248              		@ link register save eliminated.
+ 249              	.LVL17:
+ 106:EEmotor.c     ****     self->set_position += pulses_to_nudge;
+ 250              		.loc 1 106 0
+ 251 0000 0368     		ldr	r3, [r0]
+ 252 0002 9C46     		mov	ip, r3
+ 253 0004 6144     		add	r1, r1, ip
+ 254              	.LVL18:
+ 255 0006 0160     		str	r1, [r0]
+ 107:EEmotor.c     **** }
+ 256              		.loc 1 107 0
+ 257              		@ sp needed
+ 258 0008 7047     		bx	lr
+ 259              		.cfi_endproc
+ 260              	.LFE38:
+ 261              		.size	EEmotor__nudge, .-EEmotor__nudge
+ 262 000a C046     		.section	.text.EEmotor__runShaper,"ax",%progbits
+ 263              		.align	2
+ 264              		.global	EEmotor__runShaper
+ 265              		.code	16
+ 266              		.thumb_func
+ 267              		.type	EEmotor__runShaper, %function
+ 268              	EEmotor__runShaper:
+ 269              	.LFB40:
+ 108:EEmotor.c     **** 
+ 109:EEmotor.c     **** int EEmotor__run(struct EEmotor *self, uint32_t newmillis, uint32_t newencoder){
+ 110:EEmotor.c     ****     if(self->oldMillis > newmillis){ //millisecond rollover event occured!
+ 111:EEmotor.c     ****         self->oldMillis = newmillis;
+ 112:EEmotor.c     ****         return(-1); //error
+ 113:EEmotor.c     ****     }
+ 114:EEmotor.c     ****     
+ 115:EEmotor.c     ****     uint32_t elapsedMs = newmillis - self->oldMillis;
+ 116:EEmotor.c     ****     float elapsedSec = (float)elapsedMs/1000.0;
+ 117:EEmotor.c     ****     
+ 118:EEmotor.c     ****     if( (newencoder > self->encoder) && ((newencoder - self->encoder) > EEMOTOR__ENCODER_ERR_THRESH
+ 119:EEmotor.c     ****         self->encoder = newencoder;
+ 120:EEmotor.c     ****         self->set_position = newencoder; // TODO: Fix Rollover Handling - This is a hack!!!
+ 121:EEmotor.c     ****         return(-2); //error  
+ 122:EEmotor.c     ****     }else if( (newencoder < self->encoder) && ((self->encoder - newencoder) > EEMOTOR__ENCODER_ERR_
+ 123:EEmotor.c     ****         self->encoder = newencoder;
+ 124:EEmotor.c     ****         self->set_position = newencoder; // TODO: Fix Rollover Handling - This is a hack!!!
+ 125:EEmotor.c     ****         return(-2); //error
+ 126:EEmotor.c     ****         
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 8
+
+
+ 127:EEmotor.c     ****     }else{
+ 128:EEmotor.c     ****         /*long deltaPosition = (newencoder - self->encoder);
+ 129:EEmotor.c     ****         self->speed = (float)deltaPosition/elapsedSec;
+ 130:EEmotor.c     ****         self->position += deltaPosition; //stores current position*/
+ 131:EEmotor.c     ****         
+ 132:EEmotor.c     ****         EEmotor__runShaper(self, elapsedSec);
+ 133:EEmotor.c     ****     
+ 134:EEmotor.c     ****         long positionError = self->shaper_out - (long)newencoder; //Don't handle rollover or anythi
+ 135:EEmotor.c     ****         self->output = EEmotor__runPI(&self->speedReg,elapsedSec,EEmotor__runPI(&self->PosReg, elap
+ 136:EEmotor.c     ****         //self->output = EEmotor__runPI(&self->PosReg, elapsedSec, ((float)positionError*self->PosR
+ 137:EEmotor.c     ****         
+ 138:EEmotor.c     ****     }
+ 139:EEmotor.c     ****     
+ 140:EEmotor.c     **** 
+ 141:EEmotor.c     ****     return(1);
+ 142:EEmotor.c     **** }
+ 143:EEmotor.c     **** 
+ 144:EEmotor.c     **** 
+ 145:EEmotor.c     **** int EEmotor__runShaper(struct EEmotor *self, float timestepSeconds){
+ 270              		.loc 1 145 0
+ 271              		.cfi_startproc
+ 272              		@ args = 0, pretend = 0, frame = 0
+ 273              		@ frame_needed = 0, uses_anonymous_args = 0
+ 274              		@ link register save eliminated.
+ 275              	.LVL19:
+ 146:EEmotor.c     ****     switch(self->ShaperVars.mode){
+ 276              		.loc 1 146 0
+ 277 0000 5823     		movs	r3, #88
+ 278 0002 C35C     		ldrb	r3, [r0, r3]
+ 279 0004 002B     		cmp	r3, #0
+ 280 0006 03D1     		bne	.L14
+ 147:EEmotor.c     ****         case SHAPER_OFF:
+ 148:EEmotor.c     ****             self->shaper_out = self->set_position; //Passthrough set position without shaping
+ 281              		.loc 1 148 0
+ 282 0008 0368     		ldr	r3, [r0]
+ 283 000a 4360     		str	r3, [r0, #4]
+ 149:EEmotor.c     ****             break;
+ 150:EEmotor.c     ****         default:
+ 151:EEmotor.c     ****             return(-1);
+ 152:EEmotor.c     ****             break;
+ 153:EEmotor.c     ****     }
+ 154:EEmotor.c     ****     
+ 155:EEmotor.c     ****     return(1); //success!
+ 284              		.loc 1 155 0
+ 285 000c 0120     		movs	r0, #1
+ 286              	.LVL20:
+ 287 000e 01E0     		b	.L11
+ 288              	.LVL21:
+ 289              	.L14:
+ 151:EEmotor.c     ****             break;
+ 290              		.loc 1 151 0
+ 291 0010 0120     		movs	r0, #1
+ 292              	.LVL22:
+ 293 0012 4042     		rsbs	r0, r0, #0
+ 294              	.L11:
+ 156:EEmotor.c     **** }
+ 295              		.loc 1 156 0
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 9
+
+
+ 296              		@ sp needed
+ 297 0014 7047     		bx	lr
+ 298              		.cfi_endproc
+ 299              	.LFE40:
+ 300              		.size	EEmotor__runShaper, .-EEmotor__runShaper
+ 301              		.global	__aeabi_fcmpgt
+ 302              		.global	__aeabi_fcmplt
+ 303              		.global	__aeabi_fmul
+ 304              		.global	__aeabi_fadd
+ 305              		.global	__aeabi_f2d
+ 306              		.global	__aeabi_dmul
+ 307              		.global	__aeabi_dadd
+ 308              		.global	__aeabi_d2f
+ 309 0016 C046     		.section	.text.EEmotor__runPI,"ax",%progbits
+ 310              		.align	2
+ 311              		.global	EEmotor__runPI
+ 312              		.code	16
+ 313              		.thumb_func
+ 314              		.type	EEmotor__runPI, %function
+ 315              	EEmotor__runPI:
+ 316              	.LFB41:
+ 157:EEmotor.c     **** 
+ 158:EEmotor.c     **** #define PI_MAXVAL 1.0
+ 159:EEmotor.c     **** #define PI_MINVAL -1.0
+ 160:EEmotor.c     **** float EEmotor__runPI(struct EEmotor_PIreg *self, float timestepSeconds, float error){ //returns con
+ 317              		.loc 1 160 0
+ 318              		.cfi_startproc
+ 319              		@ args = 0, pretend = 0, frame = 8
+ 320              		@ frame_needed = 0, uses_anonymous_args = 0
+ 321              	.LVL23:
+ 322 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 323              		.cfi_def_cfa_offset 20
+ 324              		.cfi_offset 4, -20
+ 325              		.cfi_offset 5, -16
+ 326              		.cfi_offset 6, -12
+ 327              		.cfi_offset 7, -8
+ 328              		.cfi_offset 14, -4
+ 329 0002 83B0     		sub	sp, sp, #12
+ 330              		.cfi_def_cfa_offset 32
+ 331 0004 0700     		movs	r7, r0
+ 332 0006 0E1C     		adds	r6, r1, #0
+ 333 0008 141C     		adds	r4, r2, #0
+ 334              	.LVL24:
+ 161:EEmotor.c     ****     
+ 162:EEmotor.c     ****     float thiserror = error;//*self->INPUT_SCALAR; //Scaling moved outside of this handler for effi
+ 163:EEmotor.c     ****     if(thiserror > PI_MAXVAL){
+ 335              		.loc 1 163 0
+ 336 000a FE21     		movs	r1, #254
+ 337              	.LVL25:
+ 338 000c 8905     		lsls	r1, r1, #22
+ 339 000e 101C     		adds	r0, r2, #0
+ 340              	.LVL26:
+ 341 0010 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 342              	.LVL27:
+ 343 0014 0028     		cmp	r0, #0
+ 344 0016 06D1     		bne	.L19
+ 164:EEmotor.c     ****         thiserror = PI_MAXVAL;
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 10
+
+
+ 165:EEmotor.c     ****         
+ 166:EEmotor.c     ****     }else if(thiserror < PI_MINVAL){
+ 345              		.loc 1 166 0
+ 346 0018 3449     		ldr	r1, .L25
+ 347 001a 201C     		adds	r0, r4, #0
+ 348 001c FFF7FEFF 		bl	__aeabi_fcmplt
+ 349              	.LVL28:
+ 350 0020 0028     		cmp	r0, #0
+ 351 0022 04D0     		beq	.L16
+ 352 0024 02E0     		b	.L20
+ 353              	.L19:
+ 164:EEmotor.c     ****         thiserror = PI_MAXVAL;
+ 354              		.loc 1 164 0
+ 355 0026 FE24     		movs	r4, #254
+ 356              	.LVL29:
+ 357 0028 A405     		lsls	r4, r4, #22
+ 358 002a 00E0     		b	.L16
+ 359              	.LVL30:
+ 360              	.L20:
+ 167:EEmotor.c     ****         thiserror = PI_MINVAL;
+ 361              		.loc 1 167 0
+ 362 002c 2F4C     		ldr	r4, .L25
+ 363              	.LVL31:
+ 364              	.L16:
+ 168:EEmotor.c     ****     }
+ 169:EEmotor.c     ****     
+ 170:EEmotor.c     ****     float control_out = 0;
+ 171:EEmotor.c     ****     
+ 172:EEmotor.c     ****     //============= PI CONTROLLER ===================//                                      
+ 173:EEmotor.c     ****     control_out = (thiserror * self->K_P); //Save P Term Output
+ 365              		.loc 1 173 0
+ 366 002e 3968     		ldr	r1, [r7]
+ 367 0030 201C     		adds	r0, r4, #0
+ 368 0032 FFF7FEFF 		bl	__aeabi_fmul
+ 369              	.LVL32:
+ 370 0036 051C     		adds	r5, r0, #0
+ 371              	.LVL33:
+ 174:EEmotor.c     ****     float thisIterm = ((((thiserror+self->last_error)/2.0 * self->K_I) * timestepSeconds) + self->l
+ 372              		.loc 1 174 0
+ 373 0038 B968     		ldr	r1, [r7, #8]
+ 374 003a 201C     		adds	r0, r4, #0
+ 375              	.LVL34:
+ 376 003c FFF7FEFF 		bl	__aeabi_fadd
+ 377              	.LVL35:
+ 378 0040 FFF7FEFF 		bl	__aeabi_f2d
+ 379              	.LVL36:
+ 380 0044 0022     		movs	r2, #0
+ 381 0046 2A4B     		ldr	r3, .L25+4
+ 382 0048 FFF7FEFF 		bl	__aeabi_dmul
+ 383              	.LVL37:
+ 384 004c 0090     		str	r0, [sp]
+ 385 004e 0191     		str	r1, [sp, #4]
+ 386 0050 7868     		ldr	r0, [r7, #4]
+ 387 0052 FFF7FEFF 		bl	__aeabi_f2d
+ 388              	.LVL38:
+ 389 0056 009A     		ldr	r2, [sp]
+ 390 0058 019B     		ldr	r3, [sp, #4]
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 11
+
+
+ 391 005a FFF7FEFF 		bl	__aeabi_dmul
+ 392              	.LVL39:
+ 393 005e 0090     		str	r0, [sp]
+ 394 0060 0191     		str	r1, [sp, #4]
+ 395 0062 301C     		adds	r0, r6, #0
+ 396 0064 FFF7FEFF 		bl	__aeabi_f2d
+ 397              	.LVL40:
+ 398 0068 009A     		ldr	r2, [sp]
+ 399 006a 019B     		ldr	r3, [sp, #4]
+ 400 006c FFF7FEFF 		bl	__aeabi_dmul
+ 401              	.LVL41:
+ 402 0070 0090     		str	r0, [sp]
+ 403 0072 0191     		str	r1, [sp, #4]
+ 404 0074 F868     		ldr	r0, [r7, #12]
+ 405 0076 FFF7FEFF 		bl	__aeabi_f2d
+ 406              	.LVL42:
+ 407 007a 009A     		ldr	r2, [sp]
+ 408 007c 019B     		ldr	r3, [sp, #4]
+ 409 007e FFF7FEFF 		bl	__aeabi_dadd
+ 410              	.LVL43:
+ 411 0082 FFF7FEFF 		bl	__aeabi_d2f
+ 412              	.LVL44:
+ 413 0086 061C     		adds	r6, r0, #0
+ 414              	.LVL45:
+ 175:EEmotor.c     ****     control_out = control_out + thisIterm; //Add I term portion to P term
+ 415              		.loc 1 175 0
+ 416 0088 011C     		adds	r1, r0, #0
+ 417 008a 281C     		adds	r0, r5, #0
+ 418              	.LVL46:
+ 419 008c FFF7FEFF 		bl	__aeabi_fadd
+ 420              	.LVL47:
+ 421 0090 051C     		adds	r5, r0, #0
+ 422              	.LVL48:
+ 176:EEmotor.c     ****     //============= PI CONTROLLER ===================//
+ 177:EEmotor.c     ****     
+ 178:EEmotor.c     ****     self->last_error = thiserror;
+ 423              		.loc 1 178 0
+ 424 0092 BC60     		str	r4, [r7, #8]
+ 179:EEmotor.c     ****     
+ 180:EEmotor.c     ****      if(control_out > PI_MAXVAL){ //Antiwindup - CTRL!
+ 425              		.loc 1 180 0
+ 426 0094 FE21     		movs	r1, #254
+ 427 0096 8905     		lsls	r1, r1, #22
+ 428 0098 FFF7FEFF 		bl	__aeabi_fcmpgt
+ 429              	.LVL49:
+ 430 009c 0028     		cmp	r0, #0
+ 431 009e 06D1     		bne	.L21
+ 181:EEmotor.c     ****         control_out = PI_MAXVAL;
+ 182:EEmotor.c     ****       }else if (control_out < PI_MINVAL){
+ 432              		.loc 1 182 0
+ 433 00a0 1249     		ldr	r1, .L25
+ 434 00a2 281C     		adds	r0, r5, #0
+ 435 00a4 FFF7FEFF 		bl	__aeabi_fcmplt
+ 436              	.LVL50:
+ 437 00a8 0028     		cmp	r0, #0
+ 438 00aa 04D0     		beq	.L17
+ 439 00ac 02E0     		b	.L22
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 12
+
+
+ 440              	.L21:
+ 181:EEmotor.c     ****         control_out = PI_MAXVAL;
+ 441              		.loc 1 181 0
+ 442 00ae FE25     		movs	r5, #254
+ 443              	.LVL51:
+ 444 00b0 AD05     		lsls	r5, r5, #22
+ 445 00b2 00E0     		b	.L17
+ 446              	.LVL52:
+ 447              	.L22:
+ 183:EEmotor.c     ****         control_out = PI_MINVAL;
+ 448              		.loc 1 183 0
+ 449 00b4 0D4D     		ldr	r5, .L25
+ 450              	.LVL53:
+ 451              	.L17:
+ 184:EEmotor.c     ****       }
+ 185:EEmotor.c     **** 
+ 186:EEmotor.c     ****       if(thisIterm > PI_MAXVAL){ //Antiwindup - I Term!
+ 452              		.loc 1 186 0
+ 453 00b6 FE21     		movs	r1, #254
+ 454 00b8 8905     		lsls	r1, r1, #22
+ 455 00ba 301C     		adds	r0, r6, #0
+ 456 00bc FFF7FEFF 		bl	__aeabi_fcmpgt
+ 457              	.LVL54:
+ 458 00c0 0028     		cmp	r0, #0
+ 459 00c2 06D1     		bne	.L23
+ 187:EEmotor.c     ****         thisIterm = PI_MAXVAL;
+ 188:EEmotor.c     ****       }else if (thisIterm < PI_MINVAL){
+ 460              		.loc 1 188 0
+ 461 00c4 0949     		ldr	r1, .L25
+ 462 00c6 301C     		adds	r0, r6, #0
+ 463 00c8 FFF7FEFF 		bl	__aeabi_fcmplt
+ 464              	.LVL55:
+ 465 00cc 0028     		cmp	r0, #0
+ 466 00ce 04D0     		beq	.L18
+ 467 00d0 02E0     		b	.L24
+ 468              	.L23:
+ 187:EEmotor.c     ****         thisIterm = PI_MAXVAL;
+ 469              		.loc 1 187 0
+ 470 00d2 FE26     		movs	r6, #254
+ 471              	.LVL56:
+ 472 00d4 B605     		lsls	r6, r6, #22
+ 473 00d6 00E0     		b	.L18
+ 474              	.LVL57:
+ 475              	.L24:
+ 189:EEmotor.c     ****         thisIterm = PI_MINVAL;
+ 476              		.loc 1 189 0
+ 477 00d8 044E     		ldr	r6, .L25
+ 478              	.LVL58:
+ 479              	.L18:
+ 190:EEmotor.c     ****       }
+ 191:EEmotor.c     ****     
+ 192:EEmotor.c     ****     self->last_Iterm = thisIterm;
+ 480              		.loc 1 192 0
+ 481 00da FE60     		str	r6, [r7, #12]
+ 193:EEmotor.c     ****     self->last_control = control_out;
+ 482              		.loc 1 193 0
+ 483 00dc 3D61     		str	r5, [r7, #16]
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 13
+
+
+ 194:EEmotor.c     ****     return(control_out*self->OUTPUT_SCALAR);
+ 484              		.loc 1 194 0
+ 485 00de B969     		ldr	r1, [r7, #24]
+ 486 00e0 281C     		adds	r0, r5, #0
+ 487 00e2 FFF7FEFF 		bl	__aeabi_fmul
+ 488              	.LVL59:
+ 195:EEmotor.c     **** }
+ 489              		.loc 1 195 0
+ 490 00e6 03B0     		add	sp, sp, #12
+ 491              		@ sp needed
+ 492              	.LVL60:
+ 493              	.LVL61:
+ 494              	.LVL62:
+ 495              	.LVL63:
+ 496 00e8 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 497              	.L26:
+ 498 00ea C046     		.align	2
+ 499              	.L25:
+ 500 00ec 000080BF 		.word	-1082130432
+ 501 00f0 0000E03F 		.word	1071644672
+ 502              		.cfi_endproc
+ 503              	.LFE41:
+ 504              		.size	EEmotor__runPI, .-EEmotor__runPI
+ 505              		.global	__aeabi_ui2f
+ 506              		.global	__aeabi_fdiv
+ 507              		.global	__aeabi_i2f
+ 508              		.section	.text.EEmotor__run,"ax",%progbits
+ 509              		.align	2
+ 510              		.global	EEmotor__run
+ 511              		.code	16
+ 512              		.thumb_func
+ 513              		.type	EEmotor__run, %function
+ 514              	EEmotor__run:
+ 515              	.LFB39:
+ 109:EEmotor.c     ****     if(self->oldMillis > newmillis){ //millisecond rollover event occured!
+ 516              		.loc 1 109 0
+ 517              		.cfi_startproc
+ 518              		@ args = 0, pretend = 0, frame = 0
+ 519              		@ frame_needed = 0, uses_anonymous_args = 0
+ 520              	.LVL64:
+ 521 0000 70B5     		push	{r4, r5, r6, lr}
+ 522              		.cfi_def_cfa_offset 16
+ 523              		.cfi_offset 4, -16
+ 524              		.cfi_offset 5, -12
+ 525              		.cfi_offset 6, -8
+ 526              		.cfi_offset 14, -4
+ 527 0002 0400     		movs	r4, r0
+ 528 0004 1600     		movs	r6, r2
+ 110:EEmotor.c     ****         self->oldMillis = newmillis;
+ 529              		.loc 1 110 0
+ 530 0006 0069     		ldr	r0, [r0, #16]
+ 531              	.LVL65:
+ 532 0008 8842     		cmp	r0, r1
+ 533 000a 03D9     		bls	.L28
+ 111:EEmotor.c     ****         return(-1); //error
+ 534              		.loc 1 111 0
+ 535 000c 2161     		str	r1, [r4, #16]
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 14
+
+
+ 112:EEmotor.c     ****     }
+ 536              		.loc 1 112 0
+ 537 000e 0120     		movs	r0, #1
+ 538 0010 4042     		rsbs	r0, r0, #0
+ 539 0012 36E0     		b	.L29
+ 540              	.L28:
+ 115:EEmotor.c     ****     float elapsedSec = (float)elapsedMs/1000.0;
+ 541              		.loc 1 115 0
+ 542 0014 081A     		subs	r0, r1, r0
+ 543              	.LVL66:
+ 116:EEmotor.c     ****     
+ 544              		.loc 1 116 0
+ 545 0016 FFF7FEFF 		bl	__aeabi_ui2f
+ 546              	.LVL67:
+ 547 001a 1A49     		ldr	r1, .L32
+ 548 001c FFF7FEFF 		bl	__aeabi_fdiv
+ 549              	.LVL68:
+ 550 0020 051C     		adds	r5, r0, #0
+ 551              	.LVL69:
+ 118:EEmotor.c     ****         self->encoder = newencoder;
+ 552              		.loc 1 118 0
+ 553 0022 E368     		ldr	r3, [r4, #12]
+ 554 0024 B342     		cmp	r3, r6
+ 555 0026 08D2     		bcs	.L30
+ 118:EEmotor.c     ****         self->encoder = newencoder;
+ 556              		.loc 1 118 0 is_stmt 0 discriminator 1
+ 557 0028 F21A     		subs	r2, r6, r3
+ 558 002a 1749     		ldr	r1, .L32+4
+ 559 002c 8A42     		cmp	r2, r1
+ 560 002e 04D9     		bls	.L30
+ 119:EEmotor.c     ****         self->set_position = newencoder; // TODO: Fix Rollover Handling - This is a hack!!!
+ 561              		.loc 1 119 0 is_stmt 1
+ 562 0030 E660     		str	r6, [r4, #12]
+ 120:EEmotor.c     ****         return(-2); //error  
+ 563              		.loc 1 120 0
+ 564 0032 2660     		str	r6, [r4]
+ 121:EEmotor.c     ****     }else if( (newencoder < self->encoder) && ((self->encoder - newencoder) > EEMOTOR__ENCODER_ERR_
+ 565              		.loc 1 121 0
+ 566 0034 0220     		movs	r0, #2
+ 567              	.LVL70:
+ 568 0036 4042     		rsbs	r0, r0, #0
+ 569 0038 23E0     		b	.L29
+ 570              	.LVL71:
+ 571              	.L30:
+ 122:EEmotor.c     ****         self->encoder = newencoder;
+ 572              		.loc 1 122 0
+ 573 003a B342     		cmp	r3, r6
+ 574 003c 08D9     		bls	.L31
+ 122:EEmotor.c     ****         self->encoder = newencoder;
+ 575              		.loc 1 122 0 is_stmt 0 discriminator 1
+ 576 003e 9B1B     		subs	r3, r3, r6
+ 577 0040 114A     		ldr	r2, .L32+4
+ 578 0042 9342     		cmp	r3, r2
+ 579 0044 04D9     		bls	.L31
+ 123:EEmotor.c     ****         self->set_position = newencoder; // TODO: Fix Rollover Handling - This is a hack!!!
+ 580              		.loc 1 123 0 is_stmt 1
+ 581 0046 E660     		str	r6, [r4, #12]
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 15
+
+
+ 124:EEmotor.c     ****         return(-2); //error
+ 582              		.loc 1 124 0
+ 583 0048 2660     		str	r6, [r4]
+ 125:EEmotor.c     ****         
+ 584              		.loc 1 125 0
+ 585 004a 0220     		movs	r0, #2
+ 586              	.LVL72:
+ 587 004c 4042     		rsbs	r0, r0, #0
+ 588 004e 18E0     		b	.L29
+ 589              	.LVL73:
+ 590              	.L31:
+ 591              	.LBB2:
+ 132:EEmotor.c     ****     
+ 592              		.loc 1 132 0
+ 593 0050 291C     		adds	r1, r5, #0
+ 594 0052 2000     		movs	r0, r4
+ 595              	.LVL74:
+ 596 0054 FFF7FEFF 		bl	EEmotor__runShaper
+ 597              	.LVL75:
+ 134:EEmotor.c     ****         self->output = EEmotor__runPI(&self->speedReg,elapsedSec,EEmotor__runPI(&self->PosReg, elap
+ 598              		.loc 1 134 0
+ 599 0058 6368     		ldr	r3, [r4, #4]
+ 600 005a 981B     		subs	r0, r3, r6
+ 601              	.LVL76:
+ 135:EEmotor.c     ****         //self->output = EEmotor__runPI(&self->PosReg, elapsedSec, ((float)positionError*self->PosR
+ 602              		.loc 1 135 0
+ 603 005c FFF7FEFF 		bl	__aeabi_i2f
+ 604              	.LVL77:
+ 605 0060 216D     		ldr	r1, [r4, #80]
+ 606 0062 FFF7FEFF 		bl	__aeabi_fmul
+ 607              	.LVL78:
+ 608 0066 021C     		adds	r2, r0, #0
+ 609 0068 2000     		movs	r0, r4
+ 610 006a 3C30     		adds	r0, r0, #60
+ 611 006c 291C     		adds	r1, r5, #0
+ 612 006e FFF7FEFF 		bl	EEmotor__runPI
+ 613              	.LVL79:
+ 614 0072 021C     		adds	r2, r0, #0
+ 615 0074 2000     		movs	r0, r4
+ 616 0076 2030     		adds	r0, r0, #32
+ 617 0078 291C     		adds	r1, r5, #0
+ 618 007a FFF7FEFF 		bl	EEmotor__runPI
+ 619              	.LVL80:
+ 620 007e 6061     		str	r0, [r4, #20]
+ 621              	.LBE2:
+ 141:EEmotor.c     **** }
+ 622              		.loc 1 141 0
+ 623 0080 0120     		movs	r0, #1
+ 624              	.LVL81:
+ 625              	.L29:
+ 142:EEmotor.c     **** 
+ 626              		.loc 1 142 0
+ 627              		@ sp needed
+ 628              	.LVL82:
+ 629              	.LVL83:
+ 630 0082 70BD     		pop	{r4, r5, r6, pc}
+ 631              	.L33:
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 16
+
+
+ 632              		.align	2
+ 633              	.L32:
+ 634 0084 00007A44 		.word	1148846080
+ 635 0088 FF0F0000 		.word	4095
+ 636              		.cfi_endproc
+ 637              	.LFE39:
+ 638              		.size	EEmotor__run, .-EEmotor__run
+ 639              		.section	.text.EEmotor__setPIParams,"ax",%progbits
+ 640              		.align	2
+ 641              		.global	EEmotor__setPIParams
+ 642              		.code	16
+ 643              		.thumb_func
+ 644              		.type	EEmotor__setPIParams, %function
+ 645              	EEmotor__setPIParams:
+ 646              	.LFB42:
+ 196:EEmotor.c     **** 
+ 197:EEmotor.c     **** 
+ 198:EEmotor.c     **** void EEmotor__setPIParams(struct EEmotor *self, float sI, float sP, float pI, float pP){ //update P
+ 647              		.loc 1 198 0
+ 648              		.cfi_startproc
+ 649              		@ args = 4, pretend = 0, frame = 0
+ 650              		@ frame_needed = 0, uses_anonymous_args = 0
+ 651              		@ link register save eliminated.
+ 652              	.LVL84:
+ 199:EEmotor.c     ****     self->PosReg.K_I = pI;
+ 653              		.loc 1 199 0
+ 654 0000 0364     		str	r3, [r0, #64]
+ 200:EEmotor.c     ****     self->PosReg.K_P = pP;
+ 655              		.loc 1 200 0
+ 656 0002 009B     		ldr	r3, [sp]
+ 657              	.LVL85:
+ 658 0004 C363     		str	r3, [r0, #60]
+ 201:EEmotor.c     ****     self->speedReg.K_I = sI;
+ 659              		.loc 1 201 0
+ 660 0006 4162     		str	r1, [r0, #36]
+ 202:EEmotor.c     ****     self->speedReg.K_P = sP;
+ 661              		.loc 1 202 0
+ 662 0008 0262     		str	r2, [r0, #32]
+ 203:EEmotor.c     **** }
+ 663              		.loc 1 203 0
+ 664              		@ sp needed
+ 665 000a 7047     		bx	lr
+ 666              		.cfi_endproc
+ 667              	.LFE42:
+ 668              		.size	EEmotor__setPIParams, .-EEmotor__setPIParams
+ 669              		.text
+ 670              	.Letext0:
+ 671              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 672              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 673              		.file 4 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 674              		.section	.debug_info,"",%progbits
+ 675              	.Ldebug_info0:
+ 676 0000 06050000 		.4byte	0x506
+ 677 0004 0400     		.2byte	0x4
+ 678 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 679 000a 04       		.byte	0x4
+ 680 000b 01       		.uleb128 0x1
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 17
+
+
+ 681 000c EE020000 		.4byte	.LASF65
+ 682 0010 0C       		.byte	0xc
+ 683 0011 7D000000 		.4byte	.LASF66
+ 684 0015 61020000 		.4byte	.LASF67
+ 685 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 686 001d 00000000 		.4byte	0
+ 687 0021 00000000 		.4byte	.Ldebug_line0
+ 688 0025 02       		.uleb128 0x2
+ 689 0026 04       		.byte	0x4
+ 690 0027 04       		.byte	0x4
+ 691 0028 33010000 		.4byte	.LASF0
+ 692 002c 02       		.uleb128 0x2
+ 693 002d 01       		.byte	0x1
+ 694 002e 06       		.byte	0x6
+ 695 002f D4010000 		.4byte	.LASF1
+ 696 0033 03       		.uleb128 0x3
+ 697 0034 CB030000 		.4byte	.LASF6
+ 698 0038 02       		.byte	0x2
+ 699 0039 1D       		.byte	0x1d
+ 700 003a 3E000000 		.4byte	0x3e
+ 701 003e 02       		.uleb128 0x2
+ 702 003f 01       		.byte	0x1
+ 703 0040 08       		.byte	0x8
+ 704 0041 79010000 		.4byte	.LASF2
+ 705 0045 02       		.uleb128 0x2
+ 706 0046 02       		.byte	0x2
+ 707 0047 05       		.byte	0x5
+ 708 0048 5B000000 		.4byte	.LASF3
+ 709 004c 02       		.uleb128 0x2
+ 710 004d 02       		.byte	0x2
+ 711 004e 07       		.byte	0x7
+ 712 004f 49020000 		.4byte	.LASF4
+ 713 0053 02       		.uleb128 0x2
+ 714 0054 04       		.byte	0x4
+ 715 0055 05       		.byte	0x5
+ 716 0056 57010000 		.4byte	.LASF5
+ 717 005a 03       		.uleb128 0x3
+ 718 005b B1000000 		.4byte	.LASF7
+ 719 005f 02       		.byte	0x2
+ 720 0060 41       		.byte	0x41
+ 721 0061 65000000 		.4byte	0x65
+ 722 0065 02       		.uleb128 0x2
+ 723 0066 04       		.byte	0x4
+ 724 0067 07       		.byte	0x7
+ 725 0068 CA020000 		.4byte	.LASF8
+ 726 006c 02       		.uleb128 0x2
+ 727 006d 08       		.byte	0x8
+ 728 006e 05       		.byte	0x5
+ 729 006f A3000000 		.4byte	.LASF9
+ 730 0073 02       		.uleb128 0x2
+ 731 0074 08       		.byte	0x8
+ 732 0075 07       		.byte	0x7
+ 733 0076 E5010000 		.4byte	.LASF10
+ 734 007a 04       		.uleb128 0x4
+ 735 007b 04       		.byte	0x4
+ 736 007c 05       		.byte	0x5
+ 737 007d 696E7400 		.ascii	"int\000"
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 18
+
+
+ 738 0081 02       		.uleb128 0x2
+ 739 0082 04       		.byte	0x4
+ 740 0083 07       		.byte	0x7
+ 741 0084 05020000 		.4byte	.LASF11
+ 742 0088 03       		.uleb128 0x3
+ 743 0089 F1000000 		.4byte	.LASF12
+ 744 008d 03       		.byte	0x3
+ 745 008e 18       		.byte	0x18
+ 746 008f 33000000 		.4byte	0x33
+ 747 0093 03       		.uleb128 0x3
+ 748 0094 FC010000 		.4byte	.LASF13
+ 749 0098 03       		.byte	0x3
+ 750 0099 30       		.byte	0x30
+ 751 009a 5A000000 		.4byte	0x5a
+ 752 009e 02       		.uleb128 0x2
+ 753 009f 08       		.byte	0x8
+ 754 00a0 04       		.byte	0x4
+ 755 00a1 E7020000 		.4byte	.LASF14
+ 756 00a5 02       		.uleb128 0x2
+ 757 00a6 01       		.byte	0x1
+ 758 00a7 08       		.byte	0x8
+ 759 00a8 5C020000 		.4byte	.LASF15
+ 760 00ac 02       		.uleb128 0x2
+ 761 00ad 08       		.byte	0x8
+ 762 00ae 04       		.byte	0x4
+ 763 00af 90010000 		.4byte	.LASF16
+ 764 00b3 02       		.uleb128 0x2
+ 765 00b4 04       		.byte	0x4
+ 766 00b5 07       		.byte	0x7
+ 767 00b6 87000000 		.4byte	.LASF17
+ 768 00ba 05       		.uleb128 0x5
+ 769 00bb BC000000 		.4byte	.LASF23
+ 770 00bf 1C       		.byte	0x1c
+ 771 00c0 01       		.byte	0x1
+ 772 00c1 11       		.byte	0x11
+ 773 00c2 1B010000 		.4byte	0x11b
+ 774 00c6 06       		.uleb128 0x6
+ 775 00c7 4B5F5000 		.ascii	"K_P\000"
+ 776 00cb 01       		.byte	0x1
+ 777 00cc 12       		.byte	0x12
+ 778 00cd 25000000 		.4byte	0x25
+ 779 00d1 00       		.byte	0
+ 780 00d2 06       		.uleb128 0x6
+ 781 00d3 4B5F4900 		.ascii	"K_I\000"
+ 782 00d7 01       		.byte	0x1
+ 783 00d8 13       		.byte	0x13
+ 784 00d9 25000000 		.4byte	0x25
+ 785 00dd 04       		.byte	0x4
+ 786 00de 07       		.uleb128 0x7
+ 787 00df DC020000 		.4byte	.LASF18
+ 788 00e3 01       		.byte	0x1
+ 789 00e4 14       		.byte	0x14
+ 790 00e5 25000000 		.4byte	0x25
+ 791 00e9 08       		.byte	0x8
+ 792 00ea 07       		.uleb128 0x7
+ 793 00eb BF020000 		.4byte	.LASF19
+ 794 00ef 01       		.byte	0x1
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 19
+
+
+ 795 00f0 15       		.byte	0x15
+ 796 00f1 25000000 		.4byte	0x25
+ 797 00f5 0C       		.byte	0xc
+ 798 00f6 07       		.uleb128 0x7
+ 799 00f7 1C020000 		.4byte	.LASF20
+ 800 00fb 01       		.byte	0x1
+ 801 00fc 16       		.byte	0x16
+ 802 00fd 25000000 		.4byte	0x25
+ 803 0101 10       		.byte	0x10
+ 804 0102 07       		.uleb128 0x7
+ 805 0103 BC010000 		.4byte	.LASF21
+ 806 0107 01       		.byte	0x1
+ 807 0108 17       		.byte	0x17
+ 808 0109 25000000 		.4byte	0x25
+ 809 010d 14       		.byte	0x14
+ 810 010e 07       		.uleb128 0x7
+ 811 010f 17010000 		.4byte	.LASF22
+ 812 0113 01       		.byte	0x1
+ 813 0114 18       		.byte	0x18
+ 814 0115 25000000 		.4byte	0x25
+ 815 0119 18       		.byte	0x18
+ 816 011a 00       		.byte	0
+ 817 011b 05       		.uleb128 0x5
+ 818 011c 03010000 		.4byte	.LASF24
+ 819 0120 01       		.byte	0x1
+ 820 0121 01       		.byte	0x1
+ 821 0122 1D       		.byte	0x1d
+ 822 0123 34010000 		.4byte	0x134
+ 823 0127 07       		.uleb128 0x7
+ 824 0128 CA000000 		.4byte	.LASF25
+ 825 012c 01       		.byte	0x1
+ 826 012d 1E       		.byte	0x1e
+ 827 012e 88000000 		.4byte	0x88
+ 828 0132 00       		.byte	0
+ 829 0133 00       		.byte	0
+ 830 0134 05       		.uleb128 0x5
+ 831 0135 90000000 		.4byte	.LASF26
+ 832 0139 5C       		.byte	0x5c
+ 833 013a 01       		.byte	0x1
+ 834 013b 21       		.byte	0x21
+ 835 013c C5010000 		.4byte	0x1c5
+ 836 0140 07       		.uleb128 0x7
+ 837 0141 D9000000 		.4byte	.LASF27
+ 838 0145 01       		.byte	0x1
+ 839 0146 23       		.byte	0x23
+ 840 0147 53000000 		.4byte	0x53
+ 841 014b 00       		.byte	0
+ 842 014c 07       		.uleb128 0x7
+ 843 014d C9010000 		.4byte	.LASF28
+ 844 0151 01       		.byte	0x1
+ 845 0152 24       		.byte	0x24
+ 846 0153 53000000 		.4byte	0x53
+ 847 0157 04       		.byte	0x4
+ 848 0158 07       		.uleb128 0x7
+ 849 0159 80030000 		.4byte	.LASF29
+ 850 015d 01       		.byte	0x1
+ 851 015e 25       		.byte	0x25
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 20
+
+
+ 852 015f 53000000 		.4byte	0x53
+ 853 0163 08       		.byte	0x8
+ 854 0164 07       		.uleb128 0x7
+ 855 0165 A7030000 		.4byte	.LASF30
+ 856 0169 01       		.byte	0x1
+ 857 016a 26       		.byte	0x26
+ 858 016b 93000000 		.4byte	0x93
+ 859 016f 0C       		.byte	0xc
+ 860 0170 07       		.uleb128 0x7
+ 861 0171 F9000000 		.4byte	.LASF31
+ 862 0175 01       		.byte	0x1
+ 863 0176 27       		.byte	0x27
+ 864 0177 93000000 		.4byte	0x93
+ 865 017b 10       		.byte	0x10
+ 866 017c 07       		.uleb128 0x7
+ 867 017d 90030000 		.4byte	.LASF32
+ 868 0181 01       		.byte	0x1
+ 869 0182 28       		.byte	0x28
+ 870 0183 25000000 		.4byte	0x25
+ 871 0187 14       		.byte	0x14
+ 872 0188 07       		.uleb128 0x7
+ 873 0189 29020000 		.4byte	.LASF33
+ 874 018d 01       		.byte	0x1
+ 875 018e 2A       		.byte	0x2a
+ 876 018f 25000000 		.4byte	0x25
+ 877 0193 18       		.byte	0x18
+ 878 0194 07       		.uleb128 0x7
+ 879 0195 87010000 		.4byte	.LASF34
+ 880 0199 01       		.byte	0x1
+ 881 019a 2B       		.byte	0x2b
+ 882 019b 53000000 		.4byte	0x53
+ 883 019f 1C       		.byte	0x1c
+ 884 01a0 07       		.uleb128 0x7
+ 885 01a1 D5030000 		.4byte	.LASF35
+ 886 01a5 01       		.byte	0x1
+ 887 01a6 2D       		.byte	0x2d
+ 888 01a7 BA000000 		.4byte	0xba
+ 889 01ab 20       		.byte	0x20
+ 890 01ac 07       		.uleb128 0x7
+ 891 01ad 2F020000 		.4byte	.LASF36
+ 892 01b1 01       		.byte	0x1
+ 893 01b2 2E       		.byte	0x2e
+ 894 01b3 BA000000 		.4byte	0xba
+ 895 01b7 3C       		.byte	0x3c
+ 896 01b8 07       		.uleb128 0x7
+ 897 01b9 E6000000 		.4byte	.LASF37
+ 898 01bd 01       		.byte	0x1
+ 899 01be 2F       		.byte	0x2f
+ 900 01bf 1B010000 		.4byte	0x11b
+ 901 01c3 58       		.byte	0x58
+ 902 01c4 00       		.byte	0
+ 903 01c5 08       		.uleb128 0x8
+ 904 01c6 25010000 		.4byte	.LASF40
+ 905 01ca 01       		.byte	0x1
+ 906 01cb 3B       		.byte	0x3b
+ 907 01cc 00000000 		.4byte	.LFB34
+ 908 01d0 60000000 		.4byte	.LFE34-.LFB34
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 21
+
+
+ 909 01d4 01       		.uleb128 0x1
+ 910 01d5 9C       		.byte	0x9c
+ 911 01d6 F7010000 		.4byte	0x1f7
+ 912 01da 09       		.uleb128 0x9
+ 913 01db E0010000 		.4byte	.LASF38
+ 914 01df 01       		.byte	0x1
+ 915 01e0 3B       		.byte	0x3b
+ 916 01e1 F7010000 		.4byte	0x1f7
+ 917 01e5 01       		.uleb128 0x1
+ 918 01e6 50       		.byte	0x50
+ 919 01e7 0A       		.uleb128 0xa
+ 920 01e8 98000000 		.4byte	.LASF39
+ 921 01ec 01       		.byte	0x1
+ 922 01ed 3B       		.byte	0x3b
+ 923 01ee 93000000 		.4byte	0x93
+ 924 01f2 00000000 		.4byte	.LLST0
+ 925 01f6 00       		.byte	0
+ 926 01f7 0B       		.uleb128 0xb
+ 927 01f8 04       		.byte	0x4
+ 928 01f9 34010000 		.4byte	0x134
+ 929 01fd 0C       		.uleb128 0xc
+ 930 01fe 9C010000 		.4byte	.LASF42
+ 931 0202 01       		.byte	0x1
+ 932 0203 36       		.byte	0x36
+ 933 0204 F7010000 		.4byte	0x1f7
+ 934 0208 00000000 		.4byte	.LFB33
+ 935 020c 16000000 		.4byte	.LFE33-.LFB33
+ 936 0210 01       		.uleb128 0x1
+ 937 0211 9C       		.byte	0x9c
+ 938 0212 5F020000 		.4byte	0x25f
+ 939 0216 0A       		.uleb128 0xa
+ 940 0217 98000000 		.4byte	.LASF39
+ 941 021b 01       		.byte	0x1
+ 942 021c 36       		.byte	0x36
+ 943 021d 93000000 		.4byte	0x93
+ 944 0221 2D000000 		.4byte	.LLST1
+ 945 0225 0D       		.uleb128 0xd
+ 946 0226 00000000 		.4byte	.LASF52
+ 947 022a 01       		.byte	0x1
+ 948 022b 37       		.byte	0x37
+ 949 022c F7010000 		.4byte	0x1f7
+ 950 0230 59000000 		.4byte	.LLST2
+ 951 0234 0E       		.uleb128 0xe
+ 952 0235 0A000000 		.4byte	.LVL5
+ 953 0239 F3040000 		.4byte	0x4f3
+ 954 023d 48020000 		.4byte	0x248
+ 955 0241 0F       		.uleb128 0xf
+ 956 0242 01       		.uleb128 0x1
+ 957 0243 50       		.byte	0x50
+ 958 0244 02       		.uleb128 0x2
+ 959 0245 08       		.byte	0x8
+ 960 0246 5C       		.byte	0x5c
+ 961 0247 00       		.byte	0
+ 962 0248 10       		.uleb128 0x10
+ 963 0249 12000000 		.4byte	.LVL7
+ 964 024d C5010000 		.4byte	0x1c5
+ 965 0251 0F       		.uleb128 0xf
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 22
+
+
+ 966 0252 01       		.uleb128 0x1
+ 967 0253 50       		.byte	0x50
+ 968 0254 02       		.uleb128 0x2
+ 969 0255 74       		.byte	0x74
+ 970 0256 00       		.sleb128 0
+ 971 0257 0F       		.uleb128 0xf
+ 972 0258 01       		.uleb128 0x1
+ 973 0259 51       		.byte	0x51
+ 974 025a 02       		.uleb128 0x2
+ 975 025b 75       		.byte	0x75
+ 976 025c 00       		.sleb128 0
+ 977 025d 00       		.byte	0
+ 978 025e 00       		.byte	0
+ 979 025f 08       		.uleb128 0x8
+ 980 0260 65000000 		.4byte	.LASF41
+ 981 0264 01       		.byte	0x1
+ 982 0265 59       		.byte	0x59
+ 983 0266 00000000 		.4byte	.LFB35
+ 984 026a 0C000000 		.4byte	.LFE35-.LFB35
+ 985 026e 01       		.uleb128 0x1
+ 986 026f 9C       		.byte	0x9c
+ 987 0270 95020000 		.4byte	0x295
+ 988 0274 0A       		.uleb128 0xa
+ 989 0275 E0010000 		.4byte	.LASF38
+ 990 0279 01       		.byte	0x1
+ 991 027a 59       		.byte	0x59
+ 992 027b F7010000 		.4byte	0x1f7
+ 993 027f 82000000 		.4byte	.LLST3
+ 994 0283 10       		.uleb128 0x10
+ 995 0284 0A000000 		.4byte	.LVL11
+ 996 0288 FE040000 		.4byte	0x4fe
+ 997 028c 0F       		.uleb128 0xf
+ 998 028d 01       		.uleb128 0x1
+ 999 028e 50       		.byte	0x50
+ 1000 028f 03       		.uleb128 0x3
+ 1001 0290 F3       		.byte	0xf3
+ 1002 0291 01       		.uleb128 0x1
+ 1003 0292 50       		.byte	0x50
+ 1004 0293 00       		.byte	0
+ 1005 0294 00       		.byte	0
+ 1006 0295 11       		.uleb128 0x11
+ 1007 0296 23000000 		.4byte	.LASF43
+ 1008 029a 01       		.byte	0x1
+ 1009 029b 61       		.byte	0x61
+ 1010 029c 53000000 		.4byte	0x53
+ 1011 02a0 00000000 		.4byte	.LFB36
+ 1012 02a4 0A000000 		.4byte	.LFE36-.LFB36
+ 1013 02a8 01       		.uleb128 0x1
+ 1014 02a9 9C       		.byte	0x9c
+ 1015 02aa BE020000 		.4byte	0x2be
+ 1016 02ae 0A       		.uleb128 0xa
+ 1017 02af E0010000 		.4byte	.LASF38
+ 1018 02b3 01       		.byte	0x1
+ 1019 02b4 61       		.byte	0x61
+ 1020 02b5 F7010000 		.4byte	0x1f7
+ 1021 02b9 A3000000 		.4byte	.LLST4
+ 1022 02bd 00       		.byte	0
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 23
+
+
+ 1023 02be 08       		.uleb128 0x8
+ 1024 02bf BF030000 		.4byte	.LASF44
+ 1025 02c3 01       		.byte	0x1
+ 1026 02c4 65       		.byte	0x65
+ 1027 02c5 00000000 		.4byte	.LFB37
+ 1028 02c9 0A000000 		.4byte	.LFE37-.LFB37
+ 1029 02cd 01       		.uleb128 0x1
+ 1030 02ce 9C       		.byte	0x9c
+ 1031 02cf F0020000 		.4byte	0x2f0
+ 1032 02d3 09       		.uleb128 0x9
+ 1033 02d4 E0010000 		.4byte	.LASF38
+ 1034 02d8 01       		.byte	0x1
+ 1035 02d9 65       		.byte	0x65
+ 1036 02da F7010000 		.4byte	0x1f7
+ 1037 02de 01       		.uleb128 0x1
+ 1038 02df 50       		.byte	0x50
+ 1039 02e0 0A       		.uleb128 0xa
+ 1040 02e1 07000000 		.4byte	.LASF45
+ 1041 02e5 01       		.byte	0x1
+ 1042 02e6 65       		.byte	0x65
+ 1043 02e7 53000000 		.4byte	0x53
+ 1044 02eb C4000000 		.4byte	.LLST5
+ 1045 02ef 00       		.byte	0
+ 1046 02f0 08       		.uleb128 0x8
+ 1047 02f1 48010000 		.4byte	.LASF46
+ 1048 02f5 01       		.byte	0x1
+ 1049 02f6 69       		.byte	0x69
+ 1050 02f7 00000000 		.4byte	.LFB38
+ 1051 02fb 0A000000 		.4byte	.LFE38-.LFB38
+ 1052 02ff 01       		.uleb128 0x1
+ 1053 0300 9C       		.byte	0x9c
+ 1054 0301 22030000 		.4byte	0x322
+ 1055 0305 09       		.uleb128 0x9
+ 1056 0306 E0010000 		.4byte	.LASF38
+ 1057 030a 01       		.byte	0x1
+ 1058 030b 69       		.byte	0x69
+ 1059 030c F7010000 		.4byte	0x1f7
+ 1060 0310 01       		.uleb128 0x1
+ 1061 0311 50       		.byte	0x50
+ 1062 0312 0A       		.uleb128 0xa
+ 1063 0313 AC010000 		.4byte	.LASF47
+ 1064 0317 01       		.byte	0x1
+ 1065 0318 69       		.byte	0x69
+ 1066 0319 53000000 		.4byte	0x53
+ 1067 031d E5000000 		.4byte	.LLST6
+ 1068 0321 00       		.byte	0
+ 1069 0322 0C       		.uleb128 0xc
+ 1070 0323 36020000 		.4byte	.LASF48
+ 1071 0327 01       		.byte	0x1
+ 1072 0328 91       		.byte	0x91
+ 1073 0329 7A000000 		.4byte	0x7a
+ 1074 032d 00000000 		.4byte	.LFB40
+ 1075 0331 16000000 		.4byte	.LFE40-.LFB40
+ 1076 0335 01       		.uleb128 0x1
+ 1077 0336 9C       		.byte	0x9c
+ 1078 0337 58030000 		.4byte	0x358
+ 1079 033b 0A       		.uleb128 0xa
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 24
+
+
+ 1080 033c E0010000 		.4byte	.LASF38
+ 1081 0340 01       		.byte	0x1
+ 1082 0341 91       		.byte	0x91
+ 1083 0342 F7010000 		.4byte	0x1f7
+ 1084 0346 06010000 		.4byte	.LLST7
+ 1085 034a 09       		.uleb128 0x9
+ 1086 034b AF030000 		.4byte	.LASF49
+ 1087 034f 01       		.byte	0x1
+ 1088 0350 91       		.byte	0x91
+ 1089 0351 25000000 		.4byte	0x25
+ 1090 0355 01       		.uleb128 0x1
+ 1091 0356 51       		.byte	0x51
+ 1092 0357 00       		.byte	0
+ 1093 0358 11       		.uleb128 0x11
+ 1094 0359 39010000 		.4byte	.LASF50
+ 1095 035d 01       		.byte	0x1
+ 1096 035e A0       		.byte	0xa0
+ 1097 035f 25000000 		.4byte	0x25
+ 1098 0363 00000000 		.4byte	.LFB41
+ 1099 0367 F4000000 		.4byte	.LFE41-.LFB41
+ 1100 036b 01       		.uleb128 0x1
+ 1101 036c 9C       		.byte	0x9c
+ 1102 036d CC030000 		.4byte	0x3cc
+ 1103 0371 0A       		.uleb128 0xa
+ 1104 0372 E0010000 		.4byte	.LASF38
+ 1105 0376 01       		.byte	0x1
+ 1106 0377 A0       		.byte	0xa0
+ 1107 0378 CC030000 		.4byte	0x3cc
+ 1108 037c 40010000 		.4byte	.LLST8
+ 1109 0380 0A       		.uleb128 0xa
+ 1110 0381 AF030000 		.4byte	.LASF49
+ 1111 0385 01       		.byte	0x1
+ 1112 0386 A0       		.byte	0xa0
+ 1113 0387 25000000 		.4byte	0x25
+ 1114 038b 6C010000 		.4byte	.LLST9
+ 1115 038f 0A       		.uleb128 0xa
+ 1116 0390 A1030000 		.4byte	.LASF51
+ 1117 0394 01       		.byte	0x1
+ 1118 0395 A0       		.byte	0xa0
+ 1119 0396 25000000 		.4byte	0x25
+ 1120 039a 9A010000 		.4byte	.LLST10
+ 1121 039e 0D       		.uleb128 0xd
+ 1122 039f 12020000 		.4byte	.LASF53
+ 1123 03a3 01       		.byte	0x1
+ 1124 03a4 A2       		.byte	0xa2
+ 1125 03a5 25000000 		.4byte	0x25
+ 1126 03a9 E3010000 		.4byte	.LLST11
+ 1127 03ad 0D       		.uleb128 0xd
+ 1128 03ae 6D010000 		.4byte	.LASF54
+ 1129 03b2 01       		.byte	0x1
+ 1130 03b3 AA       		.byte	0xaa
+ 1131 03b4 25000000 		.4byte	0x25
+ 1132 03b8 1C020000 		.4byte	.LLST12
+ 1133 03bc 0D       		.uleb128 0xd
+ 1134 03bd 19000000 		.4byte	.LASF55
+ 1135 03c1 01       		.byte	0x1
+ 1136 03c2 AE       		.byte	0xae
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 25
+
+
+ 1137 03c3 25000000 		.4byte	0x25
+ 1138 03c7 6B020000 		.4byte	.LLST13
+ 1139 03cb 00       		.byte	0
+ 1140 03cc 0B       		.uleb128 0xb
+ 1141 03cd 04       		.byte	0x4
+ 1142 03ce BA000000 		.4byte	0xba
+ 1143 03d2 11       		.uleb128 0x11
+ 1144 03d3 60010000 		.4byte	.LASF56
+ 1145 03d7 01       		.byte	0x1
+ 1146 03d8 6D       		.byte	0x6d
+ 1147 03d9 7A000000 		.4byte	0x7a
+ 1148 03dd 00000000 		.4byte	.LFB39
+ 1149 03e1 8C000000 		.4byte	.LFE39-.LFB39
+ 1150 03e5 01       		.uleb128 0x1
+ 1151 03e6 9C       		.byte	0x9c
+ 1152 03e7 9D040000 		.4byte	0x49d
+ 1153 03eb 0A       		.uleb128 0xa
+ 1154 03ec E0010000 		.4byte	.LASF38
+ 1155 03f0 01       		.byte	0x1
+ 1156 03f1 6D       		.byte	0x6d
+ 1157 03f2 F7010000 		.4byte	0x1f7
+ 1158 03f6 9F020000 		.4byte	.LLST14
+ 1159 03fa 0A       		.uleb128 0xa
+ 1160 03fb 97030000 		.4byte	.LASF57
+ 1161 03ff 01       		.byte	0x1
+ 1162 0400 6D       		.byte	0x6d
+ 1163 0401 93000000 		.4byte	0x93
+ 1164 0405 CB020000 		.4byte	.LLST15
+ 1165 0409 0A       		.uleb128 0xa
+ 1166 040a 85030000 		.4byte	.LASF58
+ 1167 040e 01       		.byte	0x1
+ 1168 040f 6D       		.byte	0x6d
+ 1169 0410 93000000 		.4byte	0x93
+ 1170 0414 EC020000 		.4byte	.LLST16
+ 1171 0418 0D       		.uleb128 0xd
+ 1172 0419 CF000000 		.4byte	.LASF59
+ 1173 041d 01       		.byte	0x1
+ 1174 041e 73       		.byte	0x73
+ 1175 041f 93000000 		.4byte	0x93
+ 1176 0423 18030000 		.4byte	.LLST17
+ 1177 0427 0D       		.uleb128 0xd
+ 1178 0428 50000000 		.4byte	.LASF60
+ 1179 042c 01       		.byte	0x1
+ 1180 042d 74       		.byte	0x74
+ 1181 042e 25000000 		.4byte	0x25
+ 1182 0432 2B030000 		.4byte	.LLST18
+ 1183 0436 12       		.uleb128 0x12
+ 1184 0437 50000000 		.4byte	.LBB2
+ 1185 043b 30000000 		.4byte	.LBE2-.LBB2
+ 1186 043f 0D       		.uleb128 0xd
+ 1187 0440 B1020000 		.4byte	.LASF61
+ 1188 0444 01       		.byte	0x1
+ 1189 0445 86       		.byte	0x86
+ 1190 0446 53000000 		.4byte	0x53
+ 1191 044a 75030000 		.4byte	.LLST19
+ 1192 044e 0E       		.uleb128 0xe
+ 1193 044f 58000000 		.4byte	.LVL75
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 26
+
+
+ 1194 0453 22030000 		.4byte	0x322
+ 1195 0457 69040000 		.4byte	0x469
+ 1196 045b 0F       		.uleb128 0xf
+ 1197 045c 01       		.uleb128 0x1
+ 1198 045d 50       		.byte	0x50
+ 1199 045e 02       		.uleb128 0x2
+ 1200 045f 74       		.byte	0x74
+ 1201 0460 00       		.sleb128 0
+ 1202 0461 0F       		.uleb128 0xf
+ 1203 0462 01       		.uleb128 0x1
+ 1204 0463 51       		.byte	0x51
+ 1205 0464 03       		.uleb128 0x3
+ 1206 0465 F5       		.byte	0xf5
+ 1207 0466 05       		.uleb128 0x5
+ 1208 0467 25       		.uleb128 0x25
+ 1209 0468 00       		.byte	0
+ 1210 0469 0E       		.uleb128 0xe
+ 1211 046a 72000000 		.4byte	.LVL79
+ 1212 046e 58030000 		.4byte	0x358
+ 1213 0472 84040000 		.4byte	0x484
+ 1214 0476 0F       		.uleb128 0xf
+ 1215 0477 01       		.uleb128 0x1
+ 1216 0478 50       		.byte	0x50
+ 1217 0479 02       		.uleb128 0x2
+ 1218 047a 74       		.byte	0x74
+ 1219 047b 3C       		.sleb128 60
+ 1220 047c 0F       		.uleb128 0xf
+ 1221 047d 01       		.uleb128 0x1
+ 1222 047e 51       		.byte	0x51
+ 1223 047f 03       		.uleb128 0x3
+ 1224 0480 F5       		.byte	0xf5
+ 1225 0481 05       		.uleb128 0x5
+ 1226 0482 25       		.uleb128 0x25
+ 1227 0483 00       		.byte	0
+ 1228 0484 10       		.uleb128 0x10
+ 1229 0485 7E000000 		.4byte	.LVL80
+ 1230 0489 58030000 		.4byte	0x358
+ 1231 048d 0F       		.uleb128 0xf
+ 1232 048e 01       		.uleb128 0x1
+ 1233 048f 50       		.byte	0x50
+ 1234 0490 02       		.uleb128 0x2
+ 1235 0491 74       		.byte	0x74
+ 1236 0492 20       		.sleb128 32
+ 1237 0493 0F       		.uleb128 0xf
+ 1238 0494 01       		.uleb128 0x1
+ 1239 0495 51       		.byte	0x51
+ 1240 0496 03       		.uleb128 0x3
+ 1241 0497 F5       		.byte	0xf5
+ 1242 0498 05       		.uleb128 0x5
+ 1243 0499 25       		.uleb128 0x25
+ 1244 049a 00       		.byte	0
+ 1245 049b 00       		.byte	0
+ 1246 049c 00       		.byte	0
+ 1247 049d 08       		.uleb128 0x8
+ 1248 049e 3B000000 		.4byte	.LASF62
+ 1249 04a2 01       		.byte	0x1
+ 1250 04a3 C6       		.byte	0xc6
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 27
+
+
+ 1251 04a4 00000000 		.4byte	.LFB42
+ 1252 04a8 0C000000 		.4byte	.LFE42-.LFB42
+ 1253 04ac 01       		.uleb128 0x1
+ 1254 04ad 9C       		.byte	0x9c
+ 1255 04ae F3040000 		.4byte	0x4f3
+ 1256 04b2 09       		.uleb128 0x9
+ 1257 04b3 E0010000 		.4byte	.LASF38
+ 1258 04b7 01       		.byte	0x1
+ 1259 04b8 C6       		.byte	0xc6
+ 1260 04b9 F7010000 		.4byte	0x1f7
+ 1261 04bd 01       		.uleb128 0x1
+ 1262 04be 50       		.byte	0x50
+ 1263 04bf 13       		.uleb128 0x13
+ 1264 04c0 734900   		.ascii	"sI\000"
+ 1265 04c3 01       		.byte	0x1
+ 1266 04c4 C6       		.byte	0xc6
+ 1267 04c5 25000000 		.4byte	0x25
+ 1268 04c9 01       		.uleb128 0x1
+ 1269 04ca 51       		.byte	0x51
+ 1270 04cb 13       		.uleb128 0x13
+ 1271 04cc 735000   		.ascii	"sP\000"
+ 1272 04cf 01       		.byte	0x1
+ 1273 04d0 C6       		.byte	0xc6
+ 1274 04d1 25000000 		.4byte	0x25
+ 1275 04d5 01       		.uleb128 0x1
+ 1276 04d6 52       		.byte	0x52
+ 1277 04d7 14       		.uleb128 0x14
+ 1278 04d8 704900   		.ascii	"pI\000"
+ 1279 04db 01       		.byte	0x1
+ 1280 04dc C6       		.byte	0xc6
+ 1281 04dd 25000000 		.4byte	0x25
+ 1282 04e1 88030000 		.4byte	.LLST20
+ 1283 04e5 13       		.uleb128 0x13
+ 1284 04e6 705000   		.ascii	"pP\000"
+ 1285 04e9 01       		.byte	0x1
+ 1286 04ea C6       		.byte	0xc6
+ 1287 04eb 25000000 		.4byte	0x25
+ 1288 04ef 02       		.uleb128 0x2
+ 1289 04f0 91       		.byte	0x91
+ 1290 04f1 00       		.sleb128 0
+ 1291 04f2 00       		.byte	0
+ 1292 04f3 15       		.uleb128 0x15
+ 1293 04f4 76000000 		.4byte	.LASF63
+ 1294 04f8 76000000 		.4byte	.LASF63
+ 1295 04fc 04       		.byte	0x4
+ 1296 04fd 64       		.byte	0x64
+ 1297 04fe 15       		.uleb128 0x15
+ 1298 04ff 12010000 		.4byte	.LASF64
+ 1299 0503 12010000 		.4byte	.LASF64
+ 1300 0507 04       		.byte	0x4
+ 1301 0508 59       		.byte	0x59
+ 1302 0509 00       		.byte	0
+ 1303              		.section	.debug_abbrev,"",%progbits
+ 1304              	.Ldebug_abbrev0:
+ 1305 0000 01       		.uleb128 0x1
+ 1306 0001 11       		.uleb128 0x11
+ 1307 0002 01       		.byte	0x1
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 28
+
+
+ 1308 0003 25       		.uleb128 0x25
+ 1309 0004 0E       		.uleb128 0xe
+ 1310 0005 13       		.uleb128 0x13
+ 1311 0006 0B       		.uleb128 0xb
+ 1312 0007 03       		.uleb128 0x3
+ 1313 0008 0E       		.uleb128 0xe
+ 1314 0009 1B       		.uleb128 0x1b
+ 1315 000a 0E       		.uleb128 0xe
+ 1316 000b 55       		.uleb128 0x55
+ 1317 000c 17       		.uleb128 0x17
+ 1318 000d 11       		.uleb128 0x11
+ 1319 000e 01       		.uleb128 0x1
+ 1320 000f 10       		.uleb128 0x10
+ 1321 0010 17       		.uleb128 0x17
+ 1322 0011 00       		.byte	0
+ 1323 0012 00       		.byte	0
+ 1324 0013 02       		.uleb128 0x2
+ 1325 0014 24       		.uleb128 0x24
+ 1326 0015 00       		.byte	0
+ 1327 0016 0B       		.uleb128 0xb
+ 1328 0017 0B       		.uleb128 0xb
+ 1329 0018 3E       		.uleb128 0x3e
+ 1330 0019 0B       		.uleb128 0xb
+ 1331 001a 03       		.uleb128 0x3
+ 1332 001b 0E       		.uleb128 0xe
+ 1333 001c 00       		.byte	0
+ 1334 001d 00       		.byte	0
+ 1335 001e 03       		.uleb128 0x3
+ 1336 001f 16       		.uleb128 0x16
+ 1337 0020 00       		.byte	0
+ 1338 0021 03       		.uleb128 0x3
+ 1339 0022 0E       		.uleb128 0xe
+ 1340 0023 3A       		.uleb128 0x3a
+ 1341 0024 0B       		.uleb128 0xb
+ 1342 0025 3B       		.uleb128 0x3b
+ 1343 0026 0B       		.uleb128 0xb
+ 1344 0027 49       		.uleb128 0x49
+ 1345 0028 13       		.uleb128 0x13
+ 1346 0029 00       		.byte	0
+ 1347 002a 00       		.byte	0
+ 1348 002b 04       		.uleb128 0x4
+ 1349 002c 24       		.uleb128 0x24
+ 1350 002d 00       		.byte	0
+ 1351 002e 0B       		.uleb128 0xb
+ 1352 002f 0B       		.uleb128 0xb
+ 1353 0030 3E       		.uleb128 0x3e
+ 1354 0031 0B       		.uleb128 0xb
+ 1355 0032 03       		.uleb128 0x3
+ 1356 0033 08       		.uleb128 0x8
+ 1357 0034 00       		.byte	0
+ 1358 0035 00       		.byte	0
+ 1359 0036 05       		.uleb128 0x5
+ 1360 0037 13       		.uleb128 0x13
+ 1361 0038 01       		.byte	0x1
+ 1362 0039 03       		.uleb128 0x3
+ 1363 003a 0E       		.uleb128 0xe
+ 1364 003b 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 29
+
+
+ 1365 003c 0B       		.uleb128 0xb
+ 1366 003d 3A       		.uleb128 0x3a
+ 1367 003e 0B       		.uleb128 0xb
+ 1368 003f 3B       		.uleb128 0x3b
+ 1369 0040 0B       		.uleb128 0xb
+ 1370 0041 01       		.uleb128 0x1
+ 1371 0042 13       		.uleb128 0x13
+ 1372 0043 00       		.byte	0
+ 1373 0044 00       		.byte	0
+ 1374 0045 06       		.uleb128 0x6
+ 1375 0046 0D       		.uleb128 0xd
+ 1376 0047 00       		.byte	0
+ 1377 0048 03       		.uleb128 0x3
+ 1378 0049 08       		.uleb128 0x8
+ 1379 004a 3A       		.uleb128 0x3a
+ 1380 004b 0B       		.uleb128 0xb
+ 1381 004c 3B       		.uleb128 0x3b
+ 1382 004d 0B       		.uleb128 0xb
+ 1383 004e 49       		.uleb128 0x49
+ 1384 004f 13       		.uleb128 0x13
+ 1385 0050 38       		.uleb128 0x38
+ 1386 0051 0B       		.uleb128 0xb
+ 1387 0052 00       		.byte	0
+ 1388 0053 00       		.byte	0
+ 1389 0054 07       		.uleb128 0x7
+ 1390 0055 0D       		.uleb128 0xd
+ 1391 0056 00       		.byte	0
+ 1392 0057 03       		.uleb128 0x3
+ 1393 0058 0E       		.uleb128 0xe
+ 1394 0059 3A       		.uleb128 0x3a
+ 1395 005a 0B       		.uleb128 0xb
+ 1396 005b 3B       		.uleb128 0x3b
+ 1397 005c 0B       		.uleb128 0xb
+ 1398 005d 49       		.uleb128 0x49
+ 1399 005e 13       		.uleb128 0x13
+ 1400 005f 38       		.uleb128 0x38
+ 1401 0060 0B       		.uleb128 0xb
+ 1402 0061 00       		.byte	0
+ 1403 0062 00       		.byte	0
+ 1404 0063 08       		.uleb128 0x8
+ 1405 0064 2E       		.uleb128 0x2e
+ 1406 0065 01       		.byte	0x1
+ 1407 0066 3F       		.uleb128 0x3f
+ 1408 0067 19       		.uleb128 0x19
+ 1409 0068 03       		.uleb128 0x3
+ 1410 0069 0E       		.uleb128 0xe
+ 1411 006a 3A       		.uleb128 0x3a
+ 1412 006b 0B       		.uleb128 0xb
+ 1413 006c 3B       		.uleb128 0x3b
+ 1414 006d 0B       		.uleb128 0xb
+ 1415 006e 27       		.uleb128 0x27
+ 1416 006f 19       		.uleb128 0x19
+ 1417 0070 11       		.uleb128 0x11
+ 1418 0071 01       		.uleb128 0x1
+ 1419 0072 12       		.uleb128 0x12
+ 1420 0073 06       		.uleb128 0x6
+ 1421 0074 40       		.uleb128 0x40
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 30
+
+
+ 1422 0075 18       		.uleb128 0x18
+ 1423 0076 9742     		.uleb128 0x2117
+ 1424 0078 19       		.uleb128 0x19
+ 1425 0079 01       		.uleb128 0x1
+ 1426 007a 13       		.uleb128 0x13
+ 1427 007b 00       		.byte	0
+ 1428 007c 00       		.byte	0
+ 1429 007d 09       		.uleb128 0x9
+ 1430 007e 05       		.uleb128 0x5
+ 1431 007f 00       		.byte	0
+ 1432 0080 03       		.uleb128 0x3
+ 1433 0081 0E       		.uleb128 0xe
+ 1434 0082 3A       		.uleb128 0x3a
+ 1435 0083 0B       		.uleb128 0xb
+ 1436 0084 3B       		.uleb128 0x3b
+ 1437 0085 0B       		.uleb128 0xb
+ 1438 0086 49       		.uleb128 0x49
+ 1439 0087 13       		.uleb128 0x13
+ 1440 0088 02       		.uleb128 0x2
+ 1441 0089 18       		.uleb128 0x18
+ 1442 008a 00       		.byte	0
+ 1443 008b 00       		.byte	0
+ 1444 008c 0A       		.uleb128 0xa
+ 1445 008d 05       		.uleb128 0x5
+ 1446 008e 00       		.byte	0
+ 1447 008f 03       		.uleb128 0x3
+ 1448 0090 0E       		.uleb128 0xe
+ 1449 0091 3A       		.uleb128 0x3a
+ 1450 0092 0B       		.uleb128 0xb
+ 1451 0093 3B       		.uleb128 0x3b
+ 1452 0094 0B       		.uleb128 0xb
+ 1453 0095 49       		.uleb128 0x49
+ 1454 0096 13       		.uleb128 0x13
+ 1455 0097 02       		.uleb128 0x2
+ 1456 0098 17       		.uleb128 0x17
+ 1457 0099 00       		.byte	0
+ 1458 009a 00       		.byte	0
+ 1459 009b 0B       		.uleb128 0xb
+ 1460 009c 0F       		.uleb128 0xf
+ 1461 009d 00       		.byte	0
+ 1462 009e 0B       		.uleb128 0xb
+ 1463 009f 0B       		.uleb128 0xb
+ 1464 00a0 49       		.uleb128 0x49
+ 1465 00a1 13       		.uleb128 0x13
+ 1466 00a2 00       		.byte	0
+ 1467 00a3 00       		.byte	0
+ 1468 00a4 0C       		.uleb128 0xc
+ 1469 00a5 2E       		.uleb128 0x2e
+ 1470 00a6 01       		.byte	0x1
+ 1471 00a7 3F       		.uleb128 0x3f
+ 1472 00a8 19       		.uleb128 0x19
+ 1473 00a9 03       		.uleb128 0x3
+ 1474 00aa 0E       		.uleb128 0xe
+ 1475 00ab 3A       		.uleb128 0x3a
+ 1476 00ac 0B       		.uleb128 0xb
+ 1477 00ad 3B       		.uleb128 0x3b
+ 1478 00ae 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 31
+
+
+ 1479 00af 27       		.uleb128 0x27
+ 1480 00b0 19       		.uleb128 0x19
+ 1481 00b1 49       		.uleb128 0x49
+ 1482 00b2 13       		.uleb128 0x13
+ 1483 00b3 11       		.uleb128 0x11
+ 1484 00b4 01       		.uleb128 0x1
+ 1485 00b5 12       		.uleb128 0x12
+ 1486 00b6 06       		.uleb128 0x6
+ 1487 00b7 40       		.uleb128 0x40
+ 1488 00b8 18       		.uleb128 0x18
+ 1489 00b9 9742     		.uleb128 0x2117
+ 1490 00bb 19       		.uleb128 0x19
+ 1491 00bc 01       		.uleb128 0x1
+ 1492 00bd 13       		.uleb128 0x13
+ 1493 00be 00       		.byte	0
+ 1494 00bf 00       		.byte	0
+ 1495 00c0 0D       		.uleb128 0xd
+ 1496 00c1 34       		.uleb128 0x34
+ 1497 00c2 00       		.byte	0
+ 1498 00c3 03       		.uleb128 0x3
+ 1499 00c4 0E       		.uleb128 0xe
+ 1500 00c5 3A       		.uleb128 0x3a
+ 1501 00c6 0B       		.uleb128 0xb
+ 1502 00c7 3B       		.uleb128 0x3b
+ 1503 00c8 0B       		.uleb128 0xb
+ 1504 00c9 49       		.uleb128 0x49
+ 1505 00ca 13       		.uleb128 0x13
+ 1506 00cb 02       		.uleb128 0x2
+ 1507 00cc 17       		.uleb128 0x17
+ 1508 00cd 00       		.byte	0
+ 1509 00ce 00       		.byte	0
+ 1510 00cf 0E       		.uleb128 0xe
+ 1511 00d0 898201   		.uleb128 0x4109
+ 1512 00d3 01       		.byte	0x1
+ 1513 00d4 11       		.uleb128 0x11
+ 1514 00d5 01       		.uleb128 0x1
+ 1515 00d6 31       		.uleb128 0x31
+ 1516 00d7 13       		.uleb128 0x13
+ 1517 00d8 01       		.uleb128 0x1
+ 1518 00d9 13       		.uleb128 0x13
+ 1519 00da 00       		.byte	0
+ 1520 00db 00       		.byte	0
+ 1521 00dc 0F       		.uleb128 0xf
+ 1522 00dd 8A8201   		.uleb128 0x410a
+ 1523 00e0 00       		.byte	0
+ 1524 00e1 02       		.uleb128 0x2
+ 1525 00e2 18       		.uleb128 0x18
+ 1526 00e3 9142     		.uleb128 0x2111
+ 1527 00e5 18       		.uleb128 0x18
+ 1528 00e6 00       		.byte	0
+ 1529 00e7 00       		.byte	0
+ 1530 00e8 10       		.uleb128 0x10
+ 1531 00e9 898201   		.uleb128 0x4109
+ 1532 00ec 01       		.byte	0x1
+ 1533 00ed 11       		.uleb128 0x11
+ 1534 00ee 01       		.uleb128 0x1
+ 1535 00ef 31       		.uleb128 0x31
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 32
+
+
+ 1536 00f0 13       		.uleb128 0x13
+ 1537 00f1 00       		.byte	0
+ 1538 00f2 00       		.byte	0
+ 1539 00f3 11       		.uleb128 0x11
+ 1540 00f4 2E       		.uleb128 0x2e
+ 1541 00f5 01       		.byte	0x1
+ 1542 00f6 3F       		.uleb128 0x3f
+ 1543 00f7 19       		.uleb128 0x19
+ 1544 00f8 03       		.uleb128 0x3
+ 1545 00f9 0E       		.uleb128 0xe
+ 1546 00fa 3A       		.uleb128 0x3a
+ 1547 00fb 0B       		.uleb128 0xb
+ 1548 00fc 3B       		.uleb128 0x3b
+ 1549 00fd 0B       		.uleb128 0xb
+ 1550 00fe 27       		.uleb128 0x27
+ 1551 00ff 19       		.uleb128 0x19
+ 1552 0100 49       		.uleb128 0x49
+ 1553 0101 13       		.uleb128 0x13
+ 1554 0102 11       		.uleb128 0x11
+ 1555 0103 01       		.uleb128 0x1
+ 1556 0104 12       		.uleb128 0x12
+ 1557 0105 06       		.uleb128 0x6
+ 1558 0106 40       		.uleb128 0x40
+ 1559 0107 18       		.uleb128 0x18
+ 1560 0108 9642     		.uleb128 0x2116
+ 1561 010a 19       		.uleb128 0x19
+ 1562 010b 01       		.uleb128 0x1
+ 1563 010c 13       		.uleb128 0x13
+ 1564 010d 00       		.byte	0
+ 1565 010e 00       		.byte	0
+ 1566 010f 12       		.uleb128 0x12
+ 1567 0110 0B       		.uleb128 0xb
+ 1568 0111 01       		.byte	0x1
+ 1569 0112 11       		.uleb128 0x11
+ 1570 0113 01       		.uleb128 0x1
+ 1571 0114 12       		.uleb128 0x12
+ 1572 0115 06       		.uleb128 0x6
+ 1573 0116 00       		.byte	0
+ 1574 0117 00       		.byte	0
+ 1575 0118 13       		.uleb128 0x13
+ 1576 0119 05       		.uleb128 0x5
+ 1577 011a 00       		.byte	0
+ 1578 011b 03       		.uleb128 0x3
+ 1579 011c 08       		.uleb128 0x8
+ 1580 011d 3A       		.uleb128 0x3a
+ 1581 011e 0B       		.uleb128 0xb
+ 1582 011f 3B       		.uleb128 0x3b
+ 1583 0120 0B       		.uleb128 0xb
+ 1584 0121 49       		.uleb128 0x49
+ 1585 0122 13       		.uleb128 0x13
+ 1586 0123 02       		.uleb128 0x2
+ 1587 0124 18       		.uleb128 0x18
+ 1588 0125 00       		.byte	0
+ 1589 0126 00       		.byte	0
+ 1590 0127 14       		.uleb128 0x14
+ 1591 0128 05       		.uleb128 0x5
+ 1592 0129 00       		.byte	0
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 33
+
+
+ 1593 012a 03       		.uleb128 0x3
+ 1594 012b 08       		.uleb128 0x8
+ 1595 012c 3A       		.uleb128 0x3a
+ 1596 012d 0B       		.uleb128 0xb
+ 1597 012e 3B       		.uleb128 0x3b
+ 1598 012f 0B       		.uleb128 0xb
+ 1599 0130 49       		.uleb128 0x49
+ 1600 0131 13       		.uleb128 0x13
+ 1601 0132 02       		.uleb128 0x2
+ 1602 0133 17       		.uleb128 0x17
+ 1603 0134 00       		.byte	0
+ 1604 0135 00       		.byte	0
+ 1605 0136 15       		.uleb128 0x15
+ 1606 0137 2E       		.uleb128 0x2e
+ 1607 0138 00       		.byte	0
+ 1608 0139 3F       		.uleb128 0x3f
+ 1609 013a 19       		.uleb128 0x19
+ 1610 013b 3C       		.uleb128 0x3c
+ 1611 013c 19       		.uleb128 0x19
+ 1612 013d 6E       		.uleb128 0x6e
+ 1613 013e 0E       		.uleb128 0xe
+ 1614 013f 03       		.uleb128 0x3
+ 1615 0140 0E       		.uleb128 0xe
+ 1616 0141 3A       		.uleb128 0x3a
+ 1617 0142 0B       		.uleb128 0xb
+ 1618 0143 3B       		.uleb128 0x3b
+ 1619 0144 0B       		.uleb128 0xb
+ 1620 0145 00       		.byte	0
+ 1621 0146 00       		.byte	0
+ 1622 0147 00       		.byte	0
+ 1623              		.section	.debug_loc,"",%progbits
+ 1624              	.Ldebug_loc0:
+ 1625              	.LLST0:
+ 1626 0000 00000000 		.4byte	.LVL0
+ 1627 0004 18000000 		.4byte	.LVL1
+ 1628 0008 0100     		.2byte	0x1
+ 1629 000a 51       		.byte	0x51
+ 1630 000b 18000000 		.4byte	.LVL1
+ 1631 000f 48000000 		.4byte	.LVL2
+ 1632 0013 0200     		.2byte	0x2
+ 1633 0015 70       		.byte	0x70
+ 1634 0016 00       		.sleb128 0
+ 1635 0017 48000000 		.4byte	.LVL2
+ 1636 001b 60000000 		.4byte	.LFE34
+ 1637 001f 0400     		.2byte	0x4
+ 1638 0021 F3       		.byte	0xf3
+ 1639 0022 01       		.uleb128 0x1
+ 1640 0023 51       		.byte	0x51
+ 1641 0024 9F       		.byte	0x9f
+ 1642 0025 00000000 		.4byte	0
+ 1643 0029 00000000 		.4byte	0
+ 1644              	.LLST1:
+ 1645 002d 00000000 		.4byte	.LVL3
+ 1646 0031 06000000 		.4byte	.LVL4
+ 1647 0035 0100     		.2byte	0x1
+ 1648 0037 50       		.byte	0x50
+ 1649 0038 06000000 		.4byte	.LVL4
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 34
+
+
+ 1650 003c 14000000 		.4byte	.LVL9
+ 1651 0040 0100     		.2byte	0x1
+ 1652 0042 55       		.byte	0x55
+ 1653 0043 14000000 		.4byte	.LVL9
+ 1654 0047 16000000 		.4byte	.LFE33
+ 1655 004b 0400     		.2byte	0x4
+ 1656 004d F3       		.byte	0xf3
+ 1657 004e 01       		.uleb128 0x1
+ 1658 004f 50       		.byte	0x50
+ 1659 0050 9F       		.byte	0x9f
+ 1660 0051 00000000 		.4byte	0
+ 1661 0055 00000000 		.4byte	0
+ 1662              	.LLST2:
+ 1663 0059 0C000000 		.4byte	.LVL6
+ 1664 005d 11000000 		.4byte	.LVL7-1
+ 1665 0061 0100     		.2byte	0x1
+ 1666 0063 50       		.byte	0x50
+ 1667 0064 11000000 		.4byte	.LVL7-1
+ 1668 0068 14000000 		.4byte	.LVL8
+ 1669 006c 0100     		.2byte	0x1
+ 1670 006e 54       		.byte	0x54
+ 1671 006f 14000000 		.4byte	.LVL8
+ 1672 0073 16000000 		.4byte	.LFE33
+ 1673 0077 0100     		.2byte	0x1
+ 1674 0079 50       		.byte	0x50
+ 1675 007a 00000000 		.4byte	0
+ 1676 007e 00000000 		.4byte	0
+ 1677              	.LLST3:
+ 1678 0082 00000000 		.4byte	.LVL10
+ 1679 0086 09000000 		.4byte	.LVL11-1
+ 1680 008a 0100     		.2byte	0x1
+ 1681 008c 50       		.byte	0x50
+ 1682 008d 09000000 		.4byte	.LVL11-1
+ 1683 0091 0C000000 		.4byte	.LFE35
+ 1684 0095 0400     		.2byte	0x4
+ 1685 0097 F3       		.byte	0xf3
+ 1686 0098 01       		.uleb128 0x1
+ 1687 0099 50       		.byte	0x50
+ 1688 009a 9F       		.byte	0x9f
+ 1689 009b 00000000 		.4byte	0
+ 1690 009f 00000000 		.4byte	0
+ 1691              	.LLST4:
+ 1692 00a3 00000000 		.4byte	.LVL12
+ 1693 00a7 04000000 		.4byte	.LVL13
+ 1694 00ab 0100     		.2byte	0x1
+ 1695 00ad 50       		.byte	0x50
+ 1696 00ae 04000000 		.4byte	.LVL13
+ 1697 00b2 0A000000 		.4byte	.LFE36
+ 1698 00b6 0400     		.2byte	0x4
+ 1699 00b8 F3       		.byte	0xf3
+ 1700 00b9 01       		.uleb128 0x1
+ 1701 00ba 50       		.byte	0x50
+ 1702 00bb 9F       		.byte	0x9f
+ 1703 00bc 00000000 		.4byte	0
+ 1704 00c0 00000000 		.4byte	0
+ 1705              	.LLST5:
+ 1706 00c4 00000000 		.4byte	.LVL15
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 35
+
+
+ 1707 00c8 06000000 		.4byte	.LVL16
+ 1708 00cc 0100     		.2byte	0x1
+ 1709 00ce 51       		.byte	0x51
+ 1710 00cf 06000000 		.4byte	.LVL16
+ 1711 00d3 0A000000 		.4byte	.LFE37
+ 1712 00d7 0400     		.2byte	0x4
+ 1713 00d9 F3       		.byte	0xf3
+ 1714 00da 01       		.uleb128 0x1
+ 1715 00db 51       		.byte	0x51
+ 1716 00dc 9F       		.byte	0x9f
+ 1717 00dd 00000000 		.4byte	0
+ 1718 00e1 00000000 		.4byte	0
+ 1719              	.LLST6:
+ 1720 00e5 00000000 		.4byte	.LVL17
+ 1721 00e9 06000000 		.4byte	.LVL18
+ 1722 00ed 0100     		.2byte	0x1
+ 1723 00ef 51       		.byte	0x51
+ 1724 00f0 06000000 		.4byte	.LVL18
+ 1725 00f4 0A000000 		.4byte	.LFE38
+ 1726 00f8 0400     		.2byte	0x4
+ 1727 00fa F3       		.byte	0xf3
+ 1728 00fb 01       		.uleb128 0x1
+ 1729 00fc 51       		.byte	0x51
+ 1730 00fd 9F       		.byte	0x9f
+ 1731 00fe 00000000 		.4byte	0
+ 1732 0102 00000000 		.4byte	0
+ 1733              	.LLST7:
+ 1734 0106 00000000 		.4byte	.LVL19
+ 1735 010a 0E000000 		.4byte	.LVL20
+ 1736 010e 0100     		.2byte	0x1
+ 1737 0110 50       		.byte	0x50
+ 1738 0111 0E000000 		.4byte	.LVL20
+ 1739 0115 10000000 		.4byte	.LVL21
+ 1740 0119 0400     		.2byte	0x4
+ 1741 011b F3       		.byte	0xf3
+ 1742 011c 01       		.uleb128 0x1
+ 1743 011d 50       		.byte	0x50
+ 1744 011e 9F       		.byte	0x9f
+ 1745 011f 10000000 		.4byte	.LVL21
+ 1746 0123 12000000 		.4byte	.LVL22
+ 1747 0127 0100     		.2byte	0x1
+ 1748 0129 50       		.byte	0x50
+ 1749 012a 12000000 		.4byte	.LVL22
+ 1750 012e 16000000 		.4byte	.LFE40
+ 1751 0132 0400     		.2byte	0x4
+ 1752 0134 F3       		.byte	0xf3
+ 1753 0135 01       		.uleb128 0x1
+ 1754 0136 50       		.byte	0x50
+ 1755 0137 9F       		.byte	0x9f
+ 1756 0138 00000000 		.4byte	0
+ 1757 013c 00000000 		.4byte	0
+ 1758              	.LLST8:
+ 1759 0140 00000000 		.4byte	.LVL23
+ 1760 0144 10000000 		.4byte	.LVL26
+ 1761 0148 0100     		.2byte	0x1
+ 1762 014a 50       		.byte	0x50
+ 1763 014b 10000000 		.4byte	.LVL26
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 36
+
+
+ 1764 014f E8000000 		.4byte	.LVL63
+ 1765 0153 0100     		.2byte	0x1
+ 1766 0155 57       		.byte	0x57
+ 1767 0156 E8000000 		.4byte	.LVL63
+ 1768 015a F4000000 		.4byte	.LFE41
+ 1769 015e 0400     		.2byte	0x4
+ 1770 0160 F3       		.byte	0xf3
+ 1771 0161 01       		.uleb128 0x1
+ 1772 0162 50       		.byte	0x50
+ 1773 0163 9F       		.byte	0x9f
+ 1774 0164 00000000 		.4byte	0
+ 1775 0168 00000000 		.4byte	0
+ 1776              	.LLST9:
+ 1777 016c 00000000 		.4byte	.LVL23
+ 1778 0170 0C000000 		.4byte	.LVL25
+ 1779 0174 0100     		.2byte	0x1
+ 1780 0176 51       		.byte	0x51
+ 1781 0177 0C000000 		.4byte	.LVL25
+ 1782 017b 88000000 		.4byte	.LVL45
+ 1783 017f 0100     		.2byte	0x1
+ 1784 0181 56       		.byte	0x56
+ 1785 0182 88000000 		.4byte	.LVL45
+ 1786 0186 F4000000 		.4byte	.LFE41
+ 1787 018a 0600     		.2byte	0x6
+ 1788 018c F3       		.byte	0xf3
+ 1789 018d 03       		.uleb128 0x3
+ 1790 018e F5       		.byte	0xf5
+ 1791 018f 01       		.uleb128 0x1
+ 1792 0190 25       		.uleb128 0x25
+ 1793 0191 9F       		.byte	0x9f
+ 1794 0192 00000000 		.4byte	0
+ 1795 0196 00000000 		.4byte	0
+ 1796              	.LLST10:
+ 1797 019a 00000000 		.4byte	.LVL23
+ 1798 019e 13000000 		.4byte	.LVL27-1
+ 1799 01a2 0100     		.2byte	0x1
+ 1800 01a4 52       		.byte	0x52
+ 1801 01a5 13000000 		.4byte	.LVL27-1
+ 1802 01a9 28000000 		.4byte	.LVL29
+ 1803 01ad 0100     		.2byte	0x1
+ 1804 01af 54       		.byte	0x54
+ 1805 01b0 28000000 		.4byte	.LVL29
+ 1806 01b4 2C000000 		.4byte	.LVL30
+ 1807 01b8 0600     		.2byte	0x6
+ 1808 01ba F3       		.byte	0xf3
+ 1809 01bb 03       		.uleb128 0x3
+ 1810 01bc F5       		.byte	0xf5
+ 1811 01bd 02       		.uleb128 0x2
+ 1812 01be 25       		.uleb128 0x25
+ 1813 01bf 9F       		.byte	0x9f
+ 1814 01c0 2C000000 		.4byte	.LVL30
+ 1815 01c4 2E000000 		.4byte	.LVL31
+ 1816 01c8 0100     		.2byte	0x1
+ 1817 01ca 54       		.byte	0x54
+ 1818 01cb 2E000000 		.4byte	.LVL31
+ 1819 01cf F4000000 		.4byte	.LFE41
+ 1820 01d3 0600     		.2byte	0x6
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 37
+
+
+ 1821 01d5 F3       		.byte	0xf3
+ 1822 01d6 03       		.uleb128 0x3
+ 1823 01d7 F5       		.byte	0xf5
+ 1824 01d8 02       		.uleb128 0x2
+ 1825 01d9 25       		.uleb128 0x25
+ 1826 01da 9F       		.byte	0x9f
+ 1827 01db 00000000 		.4byte	0
+ 1828 01df 00000000 		.4byte	0
+ 1829              	.LLST11:
+ 1830 01e3 0A000000 		.4byte	.LVL24
+ 1831 01e7 13000000 		.4byte	.LVL27-1
+ 1832 01eb 0100     		.2byte	0x1
+ 1833 01ed 52       		.byte	0x52
+ 1834 01ee 13000000 		.4byte	.LVL27-1
+ 1835 01f2 28000000 		.4byte	.LVL29
+ 1836 01f6 0100     		.2byte	0x1
+ 1837 01f8 54       		.byte	0x54
+ 1838 01f9 28000000 		.4byte	.LVL29
+ 1839 01fd 2C000000 		.4byte	.LVL30
+ 1840 0201 0600     		.2byte	0x6
+ 1841 0203 F3       		.byte	0xf3
+ 1842 0204 03       		.uleb128 0x3
+ 1843 0205 F5       		.byte	0xf5
+ 1844 0206 02       		.uleb128 0x2
+ 1845 0207 25       		.uleb128 0x25
+ 1846 0208 9F       		.byte	0x9f
+ 1847 0209 2C000000 		.4byte	.LVL30
+ 1848 020d E8000000 		.4byte	.LVL60
+ 1849 0211 0100     		.2byte	0x1
+ 1850 0213 54       		.byte	0x54
+ 1851 0214 00000000 		.4byte	0
+ 1852 0218 00000000 		.4byte	0
+ 1853              	.LLST12:
+ 1854 021c 2E000000 		.4byte	.LVL31
+ 1855 0220 38000000 		.4byte	.LVL33
+ 1856 0224 0600     		.2byte	0x6
+ 1857 0226 9E       		.byte	0x9e
+ 1858 0227 04       		.uleb128 0x4
+ 1859 0228 00000000 		.4byte	0
+ 1860 022c 38000000 		.4byte	.LVL33
+ 1861 0230 3C000000 		.4byte	.LVL34
+ 1862 0234 0100     		.2byte	0x1
+ 1863 0236 50       		.byte	0x50
+ 1864 0237 3C000000 		.4byte	.LVL34
+ 1865 023b 92000000 		.4byte	.LVL48
+ 1866 023f 0100     		.2byte	0x1
+ 1867 0241 55       		.byte	0x55
+ 1868 0242 92000000 		.4byte	.LVL48
+ 1869 0246 9B000000 		.4byte	.LVL49-1
+ 1870 024a 0100     		.2byte	0x1
+ 1871 024c 50       		.byte	0x50
+ 1872 024d 9B000000 		.4byte	.LVL49-1
+ 1873 0251 B0000000 		.4byte	.LVL51
+ 1874 0255 0100     		.2byte	0x1
+ 1875 0257 55       		.byte	0x55
+ 1876 0258 B4000000 		.4byte	.LVL52
+ 1877 025c E8000000 		.4byte	.LVL61
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 38
+
+
+ 1878 0260 0100     		.2byte	0x1
+ 1879 0262 55       		.byte	0x55
+ 1880 0263 00000000 		.4byte	0
+ 1881 0267 00000000 		.4byte	0
+ 1882              	.LLST13:
+ 1883 026b 88000000 		.4byte	.LVL45
+ 1884 026f 8C000000 		.4byte	.LVL46
+ 1885 0273 0100     		.2byte	0x1
+ 1886 0275 50       		.byte	0x50
+ 1887 0276 8C000000 		.4byte	.LVL46
+ 1888 027a 8F000000 		.4byte	.LVL47-1
+ 1889 027e 0100     		.2byte	0x1
+ 1890 0280 51       		.byte	0x51
+ 1891 0281 8F000000 		.4byte	.LVL47-1
+ 1892 0285 D4000000 		.4byte	.LVL56
+ 1893 0289 0100     		.2byte	0x1
+ 1894 028b 56       		.byte	0x56
+ 1895 028c D8000000 		.4byte	.LVL57
+ 1896 0290 E8000000 		.4byte	.LVL62
+ 1897 0294 0100     		.2byte	0x1
+ 1898 0296 56       		.byte	0x56
+ 1899 0297 00000000 		.4byte	0
+ 1900 029b 00000000 		.4byte	0
+ 1901              	.LLST14:
+ 1902 029f 00000000 		.4byte	.LVL64
+ 1903 02a3 08000000 		.4byte	.LVL65
+ 1904 02a7 0100     		.2byte	0x1
+ 1905 02a9 50       		.byte	0x50
+ 1906 02aa 08000000 		.4byte	.LVL65
+ 1907 02ae 82000000 		.4byte	.LVL82
+ 1908 02b2 0100     		.2byte	0x1
+ 1909 02b4 54       		.byte	0x54
+ 1910 02b5 82000000 		.4byte	.LVL82
+ 1911 02b9 8C000000 		.4byte	.LFE39
+ 1912 02bd 0400     		.2byte	0x4
+ 1913 02bf F3       		.byte	0xf3
+ 1914 02c0 01       		.uleb128 0x1
+ 1915 02c1 50       		.byte	0x50
+ 1916 02c2 9F       		.byte	0x9f
+ 1917 02c3 00000000 		.4byte	0
+ 1918 02c7 00000000 		.4byte	0
+ 1919              	.LLST15:
+ 1920 02cb 00000000 		.4byte	.LVL64
+ 1921 02cf 19000000 		.4byte	.LVL67-1
+ 1922 02d3 0100     		.2byte	0x1
+ 1923 02d5 51       		.byte	0x51
+ 1924 02d6 19000000 		.4byte	.LVL67-1
+ 1925 02da 8C000000 		.4byte	.LFE39
+ 1926 02de 0400     		.2byte	0x4
+ 1927 02e0 F3       		.byte	0xf3
+ 1928 02e1 01       		.uleb128 0x1
+ 1929 02e2 51       		.byte	0x51
+ 1930 02e3 9F       		.byte	0x9f
+ 1931 02e4 00000000 		.4byte	0
+ 1932 02e8 00000000 		.4byte	0
+ 1933              	.LLST16:
+ 1934 02ec 00000000 		.4byte	.LVL64
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 39
+
+
+ 1935 02f0 19000000 		.4byte	.LVL67-1
+ 1936 02f4 0100     		.2byte	0x1
+ 1937 02f6 52       		.byte	0x52
+ 1938 02f7 19000000 		.4byte	.LVL67-1
+ 1939 02fb 82000000 		.4byte	.LVL83
+ 1940 02ff 0100     		.2byte	0x1
+ 1941 0301 56       		.byte	0x56
+ 1942 0302 82000000 		.4byte	.LVL83
+ 1943 0306 8C000000 		.4byte	.LFE39
+ 1944 030a 0400     		.2byte	0x4
+ 1945 030c F3       		.byte	0xf3
+ 1946 030d 01       		.uleb128 0x1
+ 1947 030e 52       		.byte	0x52
+ 1948 030f 9F       		.byte	0x9f
+ 1949 0310 00000000 		.4byte	0
+ 1950 0314 00000000 		.4byte	0
+ 1951              	.LLST17:
+ 1952 0318 16000000 		.4byte	.LVL66
+ 1953 031c 19000000 		.4byte	.LVL67-1
+ 1954 0320 0100     		.2byte	0x1
+ 1955 0322 50       		.byte	0x50
+ 1956 0323 00000000 		.4byte	0
+ 1957 0327 00000000 		.4byte	0
+ 1958              	.LLST18:
+ 1959 032b 22000000 		.4byte	.LVL69
+ 1960 032f 36000000 		.4byte	.LVL70
+ 1961 0333 0100     		.2byte	0x1
+ 1962 0335 50       		.byte	0x50
+ 1963 0336 36000000 		.4byte	.LVL70
+ 1964 033a 3A000000 		.4byte	.LVL71
+ 1965 033e 0100     		.2byte	0x1
+ 1966 0340 55       		.byte	0x55
+ 1967 0341 3A000000 		.4byte	.LVL71
+ 1968 0345 4C000000 		.4byte	.LVL72
+ 1969 0349 0100     		.2byte	0x1
+ 1970 034b 50       		.byte	0x50
+ 1971 034c 4C000000 		.4byte	.LVL72
+ 1972 0350 50000000 		.4byte	.LVL73
+ 1973 0354 0100     		.2byte	0x1
+ 1974 0356 55       		.byte	0x55
+ 1975 0357 50000000 		.4byte	.LVL73
+ 1976 035b 54000000 		.4byte	.LVL74
+ 1977 035f 0100     		.2byte	0x1
+ 1978 0361 50       		.byte	0x50
+ 1979 0362 54000000 		.4byte	.LVL74
+ 1980 0366 82000000 		.4byte	.LVL81
+ 1981 036a 0100     		.2byte	0x1
+ 1982 036c 55       		.byte	0x55
+ 1983 036d 00000000 		.4byte	0
+ 1984 0371 00000000 		.4byte	0
+ 1985              	.LLST19:
+ 1986 0375 5C000000 		.4byte	.LVL76
+ 1987 0379 5F000000 		.4byte	.LVL77-1
+ 1988 037d 0100     		.2byte	0x1
+ 1989 037f 50       		.byte	0x50
+ 1990 0380 00000000 		.4byte	0
+ 1991 0384 00000000 		.4byte	0
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 40
+
+
+ 1992              	.LLST20:
+ 1993 0388 00000000 		.4byte	.LVL84
+ 1994 038c 04000000 		.4byte	.LVL85
+ 1995 0390 0100     		.2byte	0x1
+ 1996 0392 53       		.byte	0x53
+ 1997 0393 04000000 		.4byte	.LVL85
+ 1998 0397 0C000000 		.4byte	.LFE42
+ 1999 039b 0300     		.2byte	0x3
+ 2000 039d 70       		.byte	0x70
+ 2001 039e C000     		.sleb128 64
+ 2002 03a0 00000000 		.4byte	0
+ 2003 03a4 00000000 		.4byte	0
+ 2004              		.section	.debug_aranges,"",%progbits
+ 2005 0000 64000000 		.4byte	0x64
+ 2006 0004 0200     		.2byte	0x2
+ 2007 0006 00000000 		.4byte	.Ldebug_info0
+ 2008 000a 04       		.byte	0x4
+ 2009 000b 00       		.byte	0
+ 2010 000c 0000     		.2byte	0
+ 2011 000e 0000     		.2byte	0
+ 2012 0010 00000000 		.4byte	.LFB34
+ 2013 0014 60000000 		.4byte	.LFE34-.LFB34
+ 2014 0018 00000000 		.4byte	.LFB33
+ 2015 001c 16000000 		.4byte	.LFE33-.LFB33
+ 2016 0020 00000000 		.4byte	.LFB35
+ 2017 0024 0C000000 		.4byte	.LFE35-.LFB35
+ 2018 0028 00000000 		.4byte	.LFB36
+ 2019 002c 0A000000 		.4byte	.LFE36-.LFB36
+ 2020 0030 00000000 		.4byte	.LFB37
+ 2021 0034 0A000000 		.4byte	.LFE37-.LFB37
+ 2022 0038 00000000 		.4byte	.LFB38
+ 2023 003c 0A000000 		.4byte	.LFE38-.LFB38
+ 2024 0040 00000000 		.4byte	.LFB40
+ 2025 0044 16000000 		.4byte	.LFE40-.LFB40
+ 2026 0048 00000000 		.4byte	.LFB41
+ 2027 004c F4000000 		.4byte	.LFE41-.LFB41
+ 2028 0050 00000000 		.4byte	.LFB39
+ 2029 0054 8C000000 		.4byte	.LFE39-.LFB39
+ 2030 0058 00000000 		.4byte	.LFB42
+ 2031 005c 0C000000 		.4byte	.LFE42-.LFB42
+ 2032 0060 00000000 		.4byte	0
+ 2033 0064 00000000 		.4byte	0
+ 2034              		.section	.debug_ranges,"",%progbits
+ 2035              	.Ldebug_ranges0:
+ 2036 0000 00000000 		.4byte	.LFB34
+ 2037 0004 60000000 		.4byte	.LFE34
+ 2038 0008 00000000 		.4byte	.LFB33
+ 2039 000c 16000000 		.4byte	.LFE33
+ 2040 0010 00000000 		.4byte	.LFB35
+ 2041 0014 0C000000 		.4byte	.LFE35
+ 2042 0018 00000000 		.4byte	.LFB36
+ 2043 001c 0A000000 		.4byte	.LFE36
+ 2044 0020 00000000 		.4byte	.LFB37
+ 2045 0024 0A000000 		.4byte	.LFE37
+ 2046 0028 00000000 		.4byte	.LFB38
+ 2047 002c 0A000000 		.4byte	.LFE38
+ 2048 0030 00000000 		.4byte	.LFB40
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 41
+
+
+ 2049 0034 16000000 		.4byte	.LFE40
+ 2050 0038 00000000 		.4byte	.LFB41
+ 2051 003c F4000000 		.4byte	.LFE41
+ 2052 0040 00000000 		.4byte	.LFB39
+ 2053 0044 8C000000 		.4byte	.LFE39
+ 2054 0048 00000000 		.4byte	.LFB42
+ 2055 004c 0C000000 		.4byte	.LFE42
+ 2056 0050 00000000 		.4byte	0
+ 2057 0054 00000000 		.4byte	0
+ 2058              		.section	.debug_line,"",%progbits
+ 2059              	.Ldebug_line0:
+ 2060 0000 9A020000 		.section	.debug_str,"MS",%progbits,1
+ 2060      02009101 
+ 2060      00000201 
+ 2060      FB0E0D00 
+ 2060      01010101 
+ 2061              	.LASF52:
+ 2062 0000 72657375 		.ascii	"result\000"
+ 2062      6C7400
+ 2063              	.LASF45:
+ 2064 0007 4E657750 		.ascii	"NewPositionPulses\000"
+ 2064      6F736974 
+ 2064      696F6E50 
+ 2064      756C7365 
+ 2064      7300
+ 2065              	.LASF55:
+ 2066 0019 74686973 		.ascii	"thisIterm\000"
+ 2066      49746572 
+ 2066      6D00
+ 2067              	.LASF43:
+ 2068 0023 45456D6F 		.ascii	"EEmotor__getSpeedOutput\000"
+ 2068      746F725F 
+ 2068      5F676574 
+ 2068      53706565 
+ 2068      644F7574 
+ 2069              	.LASF62:
+ 2070 003b 45456D6F 		.ascii	"EEmotor__setPIParams\000"
+ 2070      746F725F 
+ 2070      5F736574 
+ 2070      50495061 
+ 2070      72616D73 
+ 2071              	.LASF60:
+ 2072 0050 656C6170 		.ascii	"elapsedSec\000"
+ 2072      73656453 
+ 2072      656300
+ 2073              	.LASF3:
+ 2074 005b 73686F72 		.ascii	"short int\000"
+ 2074      7420696E 
+ 2074      7400
+ 2075              	.LASF41:
+ 2076 0065 45456D6F 		.ascii	"EEmotor__destroy\000"
+ 2076      746F725F 
+ 2076      5F646573 
+ 2076      74726F79 
+ 2076      00
+ 2077              	.LASF63:
+ 2078 0076 6D616C6C 		.ascii	"malloc\000"
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 42
+
+
+ 2078      6F6300
+ 2079              	.LASF66:
+ 2080 007d 45456D6F 		.ascii	"EEmotor.c\000"
+ 2080      746F722E 
+ 2080      6300
+ 2081              	.LASF17:
+ 2082 0087 73697A65 		.ascii	"sizetype\000"
+ 2082      74797065 
+ 2082      00
+ 2083              	.LASF26:
+ 2084 0090 45456D6F 		.ascii	"EEmotor\000"
+ 2084      746F7200 
+ 2085              	.LASF39:
+ 2086 0098 656E636F 		.ascii	"encoderVal\000"
+ 2086      64657256 
+ 2086      616C00
+ 2087              	.LASF9:
+ 2088 00a3 6C6F6E67 		.ascii	"long long int\000"
+ 2088      206C6F6E 
+ 2088      6720696E 
+ 2088      7400
+ 2089              	.LASF7:
+ 2090 00b1 5F5F7569 		.ascii	"__uint32_t\000"
+ 2090      6E743332 
+ 2090      5F7400
+ 2091              	.LASF23:
+ 2092 00bc 45456D6F 		.ascii	"EEmotor_PIreg\000"
+ 2092      746F725F 
+ 2092      50497265 
+ 2092      6700
+ 2093              	.LASF25:
+ 2094 00ca 6D6F6465 		.ascii	"mode\000"
+ 2094      00
+ 2095              	.LASF59:
+ 2096 00cf 656C6170 		.ascii	"elapsedMs\000"
+ 2096      7365644D 
+ 2096      7300
+ 2097              	.LASF27:
+ 2098 00d9 7365745F 		.ascii	"set_position\000"
+ 2098      706F7369 
+ 2098      74696F6E 
+ 2098      00
+ 2099              	.LASF37:
+ 2100 00e6 53686170 		.ascii	"ShaperVars\000"
+ 2100      65725661 
+ 2100      727300
+ 2101              	.LASF12:
+ 2102 00f1 75696E74 		.ascii	"uint8_t\000"
+ 2102      385F7400 
+ 2103              	.LASF31:
+ 2104 00f9 6F6C644D 		.ascii	"oldMillis\000"
+ 2104      696C6C69 
+ 2104      7300
+ 2105              	.LASF24:
+ 2106 0103 45456D6F 		.ascii	"EEmotor_Shaper\000"
+ 2106      746F725F 
+ 2106      53686170 
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 43
+
+
+ 2106      657200
+ 2107              	.LASF64:
+ 2108 0112 66726565 		.ascii	"free\000"
+ 2108      00
+ 2109              	.LASF22:
+ 2110 0117 4F555450 		.ascii	"OUTPUT_SCALAR\000"
+ 2110      55545F53 
+ 2110      43414C41 
+ 2110      5200
+ 2111              	.LASF40:
+ 2112 0125 45456D6F 		.ascii	"EEmotor__init\000"
+ 2112      746F725F 
+ 2112      5F696E69 
+ 2112      7400
+ 2113              	.LASF0:
+ 2114 0133 666C6F61 		.ascii	"float\000"
+ 2114      7400
+ 2115              	.LASF50:
+ 2116 0139 45456D6F 		.ascii	"EEmotor__runPI\000"
+ 2116      746F725F 
+ 2116      5F72756E 
+ 2116      504900
+ 2117              	.LASF46:
+ 2118 0148 45456D6F 		.ascii	"EEmotor__nudge\000"
+ 2118      746F725F 
+ 2118      5F6E7564 
+ 2118      676500
+ 2119              	.LASF5:
+ 2120 0157 6C6F6E67 		.ascii	"long int\000"
+ 2120      20696E74 
+ 2120      00
+ 2121              	.LASF56:
+ 2122 0160 45456D6F 		.ascii	"EEmotor__run\000"
+ 2122      746F725F 
+ 2122      5F72756E 
+ 2122      00
+ 2123              	.LASF54:
+ 2124 016d 636F6E74 		.ascii	"control_out\000"
+ 2124      726F6C5F 
+ 2124      6F757400 
+ 2125              	.LASF2:
+ 2126 0179 756E7369 		.ascii	"unsigned char\000"
+ 2126      676E6564 
+ 2126      20636861 
+ 2126      7200
+ 2127              	.LASF34:
+ 2128 0187 706F7369 		.ascii	"position\000"
+ 2128      74696F6E 
+ 2128      00
+ 2129              	.LASF16:
+ 2130 0190 6C6F6E67 		.ascii	"long double\000"
+ 2130      20646F75 
+ 2130      626C6500 
+ 2131              	.LASF42:
+ 2132 019c 45456D6F 		.ascii	"EEmotor__create\000"
+ 2132      746F725F 
+ 2132      5F637265 
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 44
+
+
+ 2132      61746500 
+ 2133              	.LASF47:
+ 2134 01ac 70756C73 		.ascii	"pulses_to_nudge\000"
+ 2134      65735F74 
+ 2134      6F5F6E75 
+ 2134      64676500 
+ 2135              	.LASF21:
+ 2136 01bc 494E5055 		.ascii	"INPUT_SCALAR\000"
+ 2136      545F5343 
+ 2136      414C4152 
+ 2136      00
+ 2137              	.LASF28:
+ 2138 01c9 73686170 		.ascii	"shaper_out\000"
+ 2138      65725F6F 
+ 2138      757400
+ 2139              	.LASF1:
+ 2140 01d4 7369676E 		.ascii	"signed char\000"
+ 2140      65642063 
+ 2140      68617200 
+ 2141              	.LASF38:
+ 2142 01e0 73656C66 		.ascii	"self\000"
+ 2142      00
+ 2143              	.LASF10:
+ 2144 01e5 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2144      206C6F6E 
+ 2144      6720756E 
+ 2144      7369676E 
+ 2144      65642069 
+ 2145              	.LASF13:
+ 2146 01fc 75696E74 		.ascii	"uint32_t\000"
+ 2146      33325F74 
+ 2146      00
+ 2147              	.LASF11:
+ 2148 0205 756E7369 		.ascii	"unsigned int\000"
+ 2148      676E6564 
+ 2148      20696E74 
+ 2148      00
+ 2149              	.LASF53:
+ 2150 0212 74686973 		.ascii	"thiserror\000"
+ 2150      6572726F 
+ 2150      7200
+ 2151              	.LASF20:
+ 2152 021c 6C617374 		.ascii	"last_control\000"
+ 2152      5F636F6E 
+ 2152      74726F6C 
+ 2152      00
+ 2153              	.LASF33:
+ 2154 0229 73706565 		.ascii	"speed\000"
+ 2154      6400
+ 2155              	.LASF36:
+ 2156 022f 506F7352 		.ascii	"PosReg\000"
+ 2156      656700
+ 2157              	.LASF48:
+ 2158 0236 45456D6F 		.ascii	"EEmotor__runShaper\000"
+ 2158      746F725F 
+ 2158      5F72756E 
+ 2158      53686170 
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 45
+
+
+ 2158      657200
+ 2159              	.LASF4:
+ 2160 0249 73686F72 		.ascii	"short unsigned int\000"
+ 2160      7420756E 
+ 2160      7369676E 
+ 2160      65642069 
+ 2160      6E7400
+ 2161              	.LASF15:
+ 2162 025c 63686172 		.ascii	"char\000"
+ 2162      00
+ 2163              	.LASF67:
+ 2164 0261 453A5C50 		.ascii	"E:\\Projects\\EEforEveryone\\2022\\2201_MOTOR\\sw\\"
+ 2164      726F6A65 
+ 2164      6374735C 
+ 2164      4545666F 
+ 2164      72457665 
+ 2165 028e 345F5053 		.ascii	"4_PSoC\\2201_Motor\\2201_Motor.cydsn\000"
+ 2165      6F435C32 
+ 2165      3230315F 
+ 2165      4D6F746F 
+ 2165      725C3232 
+ 2166              	.LASF61:
+ 2167 02b1 706F7369 		.ascii	"positionError\000"
+ 2167      74696F6E 
+ 2167      4572726F 
+ 2167      7200
+ 2168              	.LASF19:
+ 2169 02bf 6C617374 		.ascii	"last_Iterm\000"
+ 2169      5F497465 
+ 2169      726D00
+ 2170              	.LASF8:
+ 2171 02ca 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2171      20756E73 
+ 2171      69676E65 
+ 2171      6420696E 
+ 2171      7400
+ 2172              	.LASF18:
+ 2173 02dc 6C617374 		.ascii	"last_error\000"
+ 2173      5F657272 
+ 2173      6F7200
+ 2174              	.LASF14:
+ 2175 02e7 646F7562 		.ascii	"double\000"
+ 2175      6C6500
+ 2176              	.LASF65:
+ 2177 02ee 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 2177      43313120 
+ 2177      352E342E 
+ 2177      31203230 
+ 2177      31363036 
+ 2178 0321 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0plus -mthumb -"
+ 2178      20726576 
+ 2178      6973696F 
+ 2178      6E203233 
+ 2178      37373135 
+ 2179 0354 67202D4F 		.ascii	"g -Og -ffunction-sections -ffat-lto-objects\000"
+ 2179      67202D66 
+ 2179      66756E63 
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccqmyC3o.s 			page 46
+
+
+ 2179      74696F6E 
+ 2179      2D736563 
+ 2180              	.LASF29:
+ 2181 0380 686F6D65 		.ascii	"home\000"
+ 2181      00
+ 2182              	.LASF58:
+ 2183 0385 6E657765 		.ascii	"newencoder\000"
+ 2183      6E636F64 
+ 2183      657200
+ 2184              	.LASF32:
+ 2185 0390 6F757470 		.ascii	"output\000"
+ 2185      757400
+ 2186              	.LASF57:
+ 2187 0397 6E65776D 		.ascii	"newmillis\000"
+ 2187      696C6C69 
+ 2187      7300
+ 2188              	.LASF51:
+ 2189 03a1 6572726F 		.ascii	"error\000"
+ 2189      7200
+ 2190              	.LASF30:
+ 2191 03a7 656E636F 		.ascii	"encoder\000"
+ 2191      64657200 
+ 2192              	.LASF49:
+ 2193 03af 74696D65 		.ascii	"timestepSeconds\000"
+ 2193      73746570 
+ 2193      5365636F 
+ 2193      6E647300 
+ 2194              	.LASF44:
+ 2195 03bf 45456D6F 		.ascii	"EEmotor__go\000"
+ 2195      746F725F 
+ 2195      5F676F00 
+ 2196              	.LASF6:
+ 2197 03cb 5F5F7569 		.ascii	"__uint8_t\000"
+ 2197      6E74385F 
+ 2197      7400
+ 2198              	.LASF35:
+ 2199 03d5 73706565 		.ascii	"speedReg\000"
+ 2199      64526567 
+ 2199      00
+ 2200              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

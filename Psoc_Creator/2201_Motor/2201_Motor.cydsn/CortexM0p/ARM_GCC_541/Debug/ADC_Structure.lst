@@ -1,0 +1,1014 @@
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0plus
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"ADC_Structure.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.ADC_DsInitialize,"ax",%progbits
+  20              		.align	2
+  21              		.global	ADC_DsInitialize
+  22              		.code	16
+  23              		.thumb_func
+  24              		.type	ADC_DsInitialize, %function
+  25              	ADC_DsInitialize:
+  26              	.LFB1:
+  27              		.file 1 "Generated_Source\\PSoC4\\ADC_Structure.c"
+   1:Generated_Source\PSoC4/ADC_Structure.c **** /***************************************************************************//**
+   2:Generated_Source\PSoC4/ADC_Structure.c **** * \file ADC_Structure.c
+   3:Generated_Source\PSoC4/ADC_Structure.c **** * \version 7.0
+   4:Generated_Source\PSoC4/ADC_Structure.c **** *
+   5:Generated_Source\PSoC4/ADC_Structure.c **** * \brief
+   6:Generated_Source\PSoC4/ADC_Structure.c **** *   This file defines the data structure global variables and provides implementation
+   7:Generated_Source\PSoC4/ADC_Structure.c **** *   for the high-level and low-level APIs of the Data Structure module.
+   8:Generated_Source\PSoC4/ADC_Structure.c **** *
+   9:Generated_Source\PSoC4/ADC_Structure.c **** * \see ADC v7.0 Datasheet
+  10:Generated_Source\PSoC4/ADC_Structure.c **** *
+  11:Generated_Source\PSoC4/ADC_Structure.c **** *//*****************************************************************************
+  12:Generated_Source\PSoC4/ADC_Structure.c **** * Copyright (2016-2019), Cypress Semiconductor Corporation.
+  13:Generated_Source\PSoC4/ADC_Structure.c **** ********************************************************************************
+  14:Generated_Source\PSoC4/ADC_Structure.c **** * This software is owned by Cypress Semiconductor Corporation (Cypress) and is
+  15:Generated_Source\PSoC4/ADC_Structure.c **** * protected by and subject to worldwide patent protection (United States and
+  16:Generated_Source\PSoC4/ADC_Structure.c **** * foreign), United States copyright laws and international treaty provisions.
+  17:Generated_Source\PSoC4/ADC_Structure.c **** * Cypress hereby grants to licensee a personal, non-exclusive, non-transferable
+  18:Generated_Source\PSoC4/ADC_Structure.c **** * license to copy, use, modify, create derivative works of, and compile the
+  19:Generated_Source\PSoC4/ADC_Structure.c **** * Cypress Source Code and derivative works for the sole purpose of creating
+  20:Generated_Source\PSoC4/ADC_Structure.c **** * custom software in support of licensee product to be used only in conjunction
+  21:Generated_Source\PSoC4/ADC_Structure.c **** * with a Cypress integrated circuit as specified in the applicable agreement.
+  22:Generated_Source\PSoC4/ADC_Structure.c **** * Any reproduction, modification, translation, compilation, or representation of
+  23:Generated_Source\PSoC4/ADC_Structure.c **** * this software except as specified above is prohibited without the express
+  24:Generated_Source\PSoC4/ADC_Structure.c **** * written permission of Cypress.
+  25:Generated_Source\PSoC4/ADC_Structure.c **** *
+  26:Generated_Source\PSoC4/ADC_Structure.c **** * Disclaimer: CYPRESS MAKES NO WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, WITH
+  27:Generated_Source\PSoC4/ADC_Structure.c **** * REGARD TO THIS MATERIAL, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  28:Generated_Source\PSoC4/ADC_Structure.c **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  29:Generated_Source\PSoC4/ADC_Structure.c **** * Cypress reserves the right to make changes without further notice to the
+  30:Generated_Source\PSoC4/ADC_Structure.c **** * materials described herein. Cypress does not assume any liability arising out
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 2
+
+
+  31:Generated_Source\PSoC4/ADC_Structure.c **** * of the application or use of any product or circuit described herein. Cypress
+  32:Generated_Source\PSoC4/ADC_Structure.c **** * does not authorize its products for use as critical components in life-support
+  33:Generated_Source\PSoC4/ADC_Structure.c **** * systems where a malfunction or failure may reasonably be expected to result in
+  34:Generated_Source\PSoC4/ADC_Structure.c **** * significant injury to the user. The inclusion of Cypress' product in a life-
+  35:Generated_Source\PSoC4/ADC_Structure.c **** * support systems application implies that the manufacturer assumes all risk of
+  36:Generated_Source\PSoC4/ADC_Structure.c **** * such use and in doing so indemnifies Cypress against all charges. Use may be
+  37:Generated_Source\PSoC4/ADC_Structure.c **** * limited by and subject to the applicable Cypress software license agreement.
+  38:Generated_Source\PSoC4/ADC_Structure.c **** *******************************************************************************/
+  39:Generated_Source\PSoC4/ADC_Structure.c **** 
+  40:Generated_Source\PSoC4/ADC_Structure.c **** #include <string.h>
+  41:Generated_Source\PSoC4/ADC_Structure.c **** #include <cytypes.h>
+  42:Generated_Source\PSoC4/ADC_Structure.c **** #include "CyLib.h"
+  43:Generated_Source\PSoC4/ADC_Structure.c **** #include "ADC_Structure.h"
+  44:Generated_Source\PSoC4/ADC_Structure.c **** #include "ADC_Configuration.h"
+  45:Generated_Source\PSoC4/ADC_Structure.c **** 
+  46:Generated_Source\PSoC4/ADC_Structure.c **** #if (ADC_ENABLE == ADC_ADC_EN)
+  47:Generated_Source\PSoC4/ADC_Structure.c ****     #include "ADC_Adc.h"
+  48:Generated_Source\PSoC4/ADC_Structure.c **** #endif /* (ADC_ENABLE == ADC_ADC_EN) */
+  49:Generated_Source\PSoC4/ADC_Structure.c **** 
+  50:Generated_Source\PSoC4/ADC_Structure.c **** /*******************************************************************************
+  51:Generated_Source\PSoC4/ADC_Structure.c **** * Defines the RAM Data Structure variables and their init data in flash
+  52:Generated_Source\PSoC4/ADC_Structure.c **** *******************************************************************************/
+  53:Generated_Source\PSoC4/ADC_Structure.c **** 
+  54:Generated_Source\PSoC4/ADC_Structure.c **** /**
+  55:Generated_Source\PSoC4/ADC_Structure.c **** * \cond SECTION_GLOBAL_VARIABLES
+  56:Generated_Source\PSoC4/ADC_Structure.c **** * \addtogroup group_global_variables
+  57:Generated_Source\PSoC4/ADC_Structure.c **** * \{
+  58:Generated_Source\PSoC4/ADC_Structure.c **** */
+  59:Generated_Source\PSoC4/ADC_Structure.c **** 
+  60:Generated_Source\PSoC4/ADC_Structure.c **** /**
+  61:Generated_Source\PSoC4/ADC_Structure.c **** * The variable that contains the ADC configuration, settings and
+  62:Generated_Source\PSoC4/ADC_Structure.c **** * scanning results. ADC_dsRam represents RAM Data Structure.
+  63:Generated_Source\PSoC4/ADC_Structure.c **** */
+  64:Generated_Source\PSoC4/ADC_Structure.c **** ADC_RAM_STRUCT ADC_dsRam;
+  65:Generated_Source\PSoC4/ADC_Structure.c **** 
+  66:Generated_Source\PSoC4/ADC_Structure.c **** /** \}
+  67:Generated_Source\PSoC4/ADC_Structure.c **** * \endcond */
+  68:Generated_Source\PSoC4/ADC_Structure.c **** 
+  69:Generated_Source\PSoC4/ADC_Structure.c **** /**
+  70:Generated_Source\PSoC4/ADC_Structure.c **** * \cond SECTION_API_CONSTANTS
+  71:Generated_Source\PSoC4/ADC_Structure.c **** * \addtogroup group_api_constants
+  72:Generated_Source\PSoC4/ADC_Structure.c **** * \{
+  73:Generated_Source\PSoC4/ADC_Structure.c **** */
+  74:Generated_Source\PSoC4/ADC_Structure.c **** 
+  75:Generated_Source\PSoC4/ADC_Structure.c **** 
+  76:Generated_Source\PSoC4/ADC_Structure.c **** /**
+  77:Generated_Source\PSoC4/ADC_Structure.c ****  *  The array of the pointers to the ADC input channels specific register.
+  78:Generated_Source\PSoC4/ADC_Structure.c ****  */
+  79:Generated_Source\PSoC4/ADC_Structure.c **** const ADC_FLASH_IO_STRUCT ADC_adcIoList[ADC_ADC_TOTAL_CHANNELS] =
+  80:Generated_Source\PSoC4/ADC_Structure.c **** {
+  81:Generated_Source\PSoC4/ADC_Structure.c ****     {
+  82:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__0__HSIOM,
+  83:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__0__PC,
+  84:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__0__DR,
+  85:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__0__PS,
+  86:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__0__HSIOM_MASK,
+  87:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__0__MASK,
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 3
+
+
+  88:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__0__HSIOM_SHIFT,
+  89:Generated_Source\PSoC4/ADC_Structure.c ****         (uint8)ADC_AdcInput__0__SHIFT,
+  90:Generated_Source\PSoC4/ADC_Structure.c ****         (uint8)ADC_AdcInput__0__SHIFT * 3u,
+  91:Generated_Source\PSoC4/ADC_Structure.c ****     },
+  92:Generated_Source\PSoC4/ADC_Structure.c ****     {
+  93:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__1__HSIOM,
+  94:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__1__PC,
+  95:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__1__DR,
+  96:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__1__PS,
+  97:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__1__HSIOM_MASK,
+  98:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__1__MASK,
+  99:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__1__HSIOM_SHIFT,
+ 100:Generated_Source\PSoC4/ADC_Structure.c ****         (uint8)ADC_AdcInput__1__SHIFT,
+ 101:Generated_Source\PSoC4/ADC_Structure.c ****         (uint8)ADC_AdcInput__1__SHIFT * 3u,
+ 102:Generated_Source\PSoC4/ADC_Structure.c ****     },
+ 103:Generated_Source\PSoC4/ADC_Structure.c ****     {
+ 104:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__2__HSIOM,
+ 105:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__2__PC,
+ 106:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__2__DR,
+ 107:Generated_Source\PSoC4/ADC_Structure.c ****         (reg32 *)ADC_AdcInput__2__PS,
+ 108:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__2__HSIOM_MASK,
+ 109:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__2__MASK,
+ 110:Generated_Source\PSoC4/ADC_Structure.c ****         ADC_AdcInput__2__HSIOM_SHIFT,
+ 111:Generated_Source\PSoC4/ADC_Structure.c ****         (uint8)ADC_AdcInput__2__SHIFT,
+ 112:Generated_Source\PSoC4/ADC_Structure.c ****         (uint8)ADC_AdcInput__2__SHIFT * 3u,
+ 113:Generated_Source\PSoC4/ADC_Structure.c ****     },
+ 114:Generated_Source\PSoC4/ADC_Structure.c **** };
+ 115:Generated_Source\PSoC4/ADC_Structure.c **** 
+ 116:Generated_Source\PSoC4/ADC_Structure.c **** 
+ 117:Generated_Source\PSoC4/ADC_Structure.c **** 
+ 118:Generated_Source\PSoC4/ADC_Structure.c **** /** \}
+ 119:Generated_Source\PSoC4/ADC_Structure.c **** * \endcond */
+ 120:Generated_Source\PSoC4/ADC_Structure.c **** 
+ 121:Generated_Source\PSoC4/ADC_Structure.c **** 
+ 122:Generated_Source\PSoC4/ADC_Structure.c **** /*******************************************************************************
+ 123:Generated_Source\PSoC4/ADC_Structure.c **** * Function Name: ADC_DsInitialize
+ 124:Generated_Source\PSoC4/ADC_Structure.c **** ****************************************************************************//**
+ 125:Generated_Source\PSoC4/ADC_Structure.c **** *
+ 126:Generated_Source\PSoC4/ADC_Structure.c **** * \brief
+ 127:Generated_Source\PSoC4/ADC_Structure.c **** *   This function initializes the Data Structure storage.
+ 128:Generated_Source\PSoC4/ADC_Structure.c **** *
+ 129:Generated_Source\PSoC4/ADC_Structure.c **** * \details
+ 130:Generated_Source\PSoC4/ADC_Structure.c **** *   Configures the initial Adc datastructure members.
+ 131:Generated_Source\PSoC4/ADC_Structure.c **** *
+ 132:Generated_Source\PSoC4/ADC_Structure.c **** *******************************************************************************/
+ 133:Generated_Source\PSoC4/ADC_Structure.c **** void ADC_DsInitialize(void)
+ 134:Generated_Source\PSoC4/ADC_Structure.c **** {
+  28              		.loc 1 134 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 10B5     		push	{r4, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 4, -8
+  35              		.cfi_offset 14, -4
+ 135:Generated_Source\PSoC4/ADC_Structure.c ****     /* Reset RAM data structure content */
+ 136:Generated_Source\PSoC4/ADC_Structure.c ****     (void)memset(&ADC_dsRam, 0, sizeof(ADC_dsRam));
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 4
+
+
+  36              		.loc 1 136 0
+  37 0002 064C     		ldr	r4, .L2
+  38 0004 1222     		movs	r2, #18
+  39 0006 0021     		movs	r1, #0
+  40 0008 2000     		movs	r0, r4
+  41 000a FFF7FEFF 		bl	memset
+  42              	.LVL0:
+ 137:Generated_Source\PSoC4/ADC_Structure.c **** 
+ 138:Generated_Source\PSoC4/ADC_Structure.c ****     ADC_dsRam.adcResolution = ADC_ADC_RESOLUTION;
+  43              		.loc 1 138 0
+  44 000e 0A23     		movs	r3, #10
+  45 0010 E373     		strb	r3, [r4, #15]
+ 139:Generated_Source\PSoC4/ADC_Structure.c ****     ADC_dsRam.adcIdac = (uint8)(ADC_ADC_IDAC_DEFAULT);
+  46              		.loc 1 139 0
+  47 0012 1133     		adds	r3, r3, #17
+  48 0014 6373     		strb	r3, [r4, #13]
+ 140:Generated_Source\PSoC4/ADC_Structure.c ****     ADC_dsRam.adcActiveCh = ADC_NO_CHANNEL;
+  49              		.loc 1 140 0
+  50 0016 E433     		adds	r3, r3, #228
+  51 0018 A373     		strb	r3, [r4, #14]
+ 141:Generated_Source\PSoC4/ADC_Structure.c **** }
+  52              		.loc 1 141 0
+  53              		@ sp needed
+  54 001a 10BD     		pop	{r4, pc}
+  55              	.L3:
+  56              		.align	2
+  57              	.L2:
+  58 001c 00000000 		.word	ADC_dsRam
+  59              		.cfi_endproc
+  60              	.LFE1:
+  61              		.size	ADC_DsInitialize, .-ADC_DsInitialize
+  62              		.global	ADC_adcIoList
+  63              		.comm	ADC_dsRam,18,4
+  64              		.section	.rodata
+  65              		.align	2
+  66              		.type	ADC_adcIoList, %object
+  67              		.size	ADC_adcIoList, 84
+  68              	ADC_adcIoList:
+  69 0000 00000240 		.word	1073872896
+  70 0004 08000440 		.word	1074003976
+  71 0008 00000440 		.word	1074003968
+  72 000c 04000440 		.word	1074003972
+  73 0010 000000F0 		.word	-268435456
+  74 0014 80000000 		.word	128
+  75 0018 1C       		.byte	28
+  76 0019 07       		.byte	7
+  77 001a 15       		.byte	21
+  78 001b 00       		.space	1
+  79 001c 00000240 		.word	1073872896
+  80 0020 08000440 		.word	1074003976
+  81 0024 00000440 		.word	1074003968
+  82 0028 04000440 		.word	1074003972
+  83 002c 0000000F 		.word	251658240
+  84 0030 40000000 		.word	64
+  85 0034 18       		.byte	24
+  86 0035 06       		.byte	6
+  87 0036 12       		.byte	18
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 5
+
+
+  88 0037 00       		.space	1
+  89 0038 00000240 		.word	1073872896
+  90 003c 08000440 		.word	1074003976
+  91 0040 00000440 		.word	1074003968
+  92 0044 04000440 		.word	1074003972
+  93 0048 0000F000 		.word	15728640
+  94 004c 20000000 		.word	32
+  95 0050 14       		.byte	20
+  96 0051 05       		.byte	5
+  97 0052 0F       		.byte	15
+  98 0053 00       		.space	1
+  99              		.text
+ 100              	.Letext0:
+ 101              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 102              		.file 3 "Generated_Source\\PSoC4\\ADC_Structure.h"
+ 103              		.section	.debug_info,"",%progbits
+ 104              	.Ldebug_info0:
+ 105 0000 38020000 		.4byte	0x238
+ 106 0004 0400     		.2byte	0x4
+ 107 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 108 000a 04       		.byte	0x4
+ 109 000b 01       		.uleb128 0x1
+ 110 000c 22020000 		.4byte	.LASF38
+ 111 0010 0C       		.byte	0xc
+ 112 0011 DE000000 		.4byte	.LASF39
+ 113 0015 9E010000 		.4byte	.LASF40
+ 114 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 115 001d 00000000 		.4byte	0
+ 116 0021 00000000 		.4byte	.Ldebug_line0
+ 117 0025 02       		.uleb128 0x2
+ 118 0026 04       		.byte	0x4
+ 119 0027 05       		.byte	0x5
+ 120 0028 696E7400 		.ascii	"int\000"
+ 121 002c 03       		.uleb128 0x3
+ 122 002d 04       		.byte	0x4
+ 123 002e 07       		.byte	0x7
+ 124 002f 1A010000 		.4byte	.LASF0
+ 125 0033 03       		.uleb128 0x3
+ 126 0034 08       		.byte	0x8
+ 127 0035 05       		.byte	0x5
+ 128 0036 59010000 		.4byte	.LASF1
+ 129 003a 03       		.uleb128 0x3
+ 130 003b 08       		.byte	0x8
+ 131 003c 04       		.byte	0x4
+ 132 003d 16020000 		.4byte	.LASF2
+ 133 0041 03       		.uleb128 0x3
+ 134 0042 01       		.byte	0x1
+ 135 0043 06       		.byte	0x6
+ 136 0044 B4020000 		.4byte	.LASF3
+ 137 0048 03       		.uleb128 0x3
+ 138 0049 01       		.byte	0x1
+ 139 004a 08       		.byte	0x8
+ 140 004b 75000000 		.4byte	.LASF4
+ 141 004f 03       		.uleb128 0x3
+ 142 0050 02       		.byte	0x2
+ 143 0051 05       		.byte	0x5
+ 144 0052 94010000 		.4byte	.LASF5
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 6
+
+
+ 145 0056 03       		.uleb128 0x3
+ 146 0057 02       		.byte	0x2
+ 147 0058 07       		.byte	0x7
+ 148 0059 33000000 		.4byte	.LASF6
+ 149 005d 03       		.uleb128 0x3
+ 150 005e 04       		.byte	0x4
+ 151 005f 05       		.byte	0x5
+ 152 0060 08020000 		.4byte	.LASF7
+ 153 0064 03       		.uleb128 0x3
+ 154 0065 04       		.byte	0x4
+ 155 0066 07       		.byte	0x7
+ 156 0067 89000000 		.4byte	.LASF8
+ 157 006b 03       		.uleb128 0x3
+ 158 006c 08       		.byte	0x8
+ 159 006d 07       		.byte	0x7
+ 160 006e 27010000 		.4byte	.LASF9
+ 161 0072 03       		.uleb128 0x3
+ 162 0073 04       		.byte	0x4
+ 163 0074 07       		.byte	0x7
+ 164 0075 50010000 		.4byte	.LASF10
+ 165 0079 03       		.uleb128 0x3
+ 166 007a 01       		.byte	0x1
+ 167 007b 08       		.byte	0x8
+ 168 007c 11020000 		.4byte	.LASF11
+ 169 0080 04       		.uleb128 0x4
+ 170 0081 A6000000 		.4byte	.LASF12
+ 171 0085 02       		.byte	0x2
+ 172 0086 FB01     		.2byte	0x1fb
+ 173 0088 48000000 		.4byte	0x48
+ 174 008c 04       		.uleb128 0x4
+ 175 008d D7000000 		.4byte	.LASF13
+ 176 0091 02       		.byte	0x2
+ 177 0092 FC01     		.2byte	0x1fc
+ 178 0094 56000000 		.4byte	0x56
+ 179 0098 04       		.uleb128 0x4
+ 180 0099 13010000 		.4byte	.LASF14
+ 181 009d 02       		.byte	0x2
+ 182 009e FD01     		.2byte	0x1fd
+ 183 00a0 64000000 		.4byte	0x64
+ 184 00a4 03       		.uleb128 0x3
+ 185 00a5 04       		.byte	0x4
+ 186 00a6 04       		.byte	0x4
+ 187 00a7 6F000000 		.4byte	.LASF15
+ 188 00ab 03       		.uleb128 0x3
+ 189 00ac 08       		.byte	0x8
+ 190 00ad 04       		.byte	0x4
+ 191 00ae BB000000 		.4byte	.LASF16
+ 192 00b2 05       		.uleb128 0x5
+ 193 00b3 80000000 		.4byte	0x80
+ 194 00b7 04       		.uleb128 0x4
+ 195 00b8 00000000 		.4byte	.LASF17
+ 196 00bc 02       		.byte	0x2
+ 197 00bd A702     		.2byte	0x2a7
+ 198 00bf C3000000 		.4byte	0xc3
+ 199 00c3 05       		.uleb128 0x5
+ 200 00c4 98000000 		.4byte	0x98
+ 201 00c8 06       		.uleb128 0x6
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 7
+
+
+ 202 00c9 12       		.byte	0x12
+ 203 00ca 03       		.byte	0x3
+ 204 00cb 37       		.byte	0x37
+ 205 00cc 25010000 		.4byte	0x125
+ 206 00d0 07       		.uleb128 0x7
+ 207 00d1 46010000 		.4byte	.LASF18
+ 208 00d5 03       		.byte	0x3
+ 209 00d6 3D       		.byte	0x3d
+ 210 00d7 25010000 		.4byte	0x125
+ 211 00db 00       		.byte	0
+ 212 00dc 07       		.uleb128 0x7
+ 213 00dd 8C010000 		.4byte	.LASF19
+ 214 00e1 03       		.byte	0x3
+ 215 00e2 43       		.byte	0x43
+ 216 00e3 25010000 		.4byte	0x125
+ 217 00e7 06       		.byte	0x6
+ 218 00e8 07       		.uleb128 0x7
+ 219 00e9 29000000 		.4byte	.LASF20
+ 220 00ed 03       		.byte	0x3
+ 221 00ee 48       		.byte	0x48
+ 222 00ef B2000000 		.4byte	0xb2
+ 223 00f3 0C       		.byte	0xc
+ 224 00f4 07       		.uleb128 0x7
+ 225 00f5 3E010000 		.4byte	.LASF21
+ 226 00f9 03       		.byte	0x3
+ 227 00fa 4D       		.byte	0x4d
+ 228 00fb 80000000 		.4byte	0x80
+ 229 00ff 0D       		.byte	0xd
+ 230 0100 07       		.uleb128 0x7
+ 231 0101 46000000 		.4byte	.LASF22
+ 232 0105 03       		.byte	0x3
+ 233 0106 52       		.byte	0x52
+ 234 0107 80000000 		.4byte	0x80
+ 235 010b 0E       		.byte	0xe
+ 236 010c 07       		.uleb128 0x7
+ 237 010d 16000000 		.4byte	.LASF23
+ 238 0111 03       		.byte	0x3
+ 239 0112 57       		.byte	0x57
+ 240 0113 80000000 		.4byte	0x80
+ 241 0117 0F       		.byte	0xf
+ 242 0118 07       		.uleb128 0x7
+ 243 0119 0C000000 		.4byte	.LASF24
+ 244 011d 03       		.byte	0x3
+ 245 011e 5C       		.byte	0x5c
+ 246 011f 80000000 		.4byte	0x80
+ 247 0123 10       		.byte	0x10
+ 248 0124 00       		.byte	0
+ 249 0125 08       		.uleb128 0x8
+ 250 0126 8C000000 		.4byte	0x8c
+ 251 012a 35010000 		.4byte	0x135
+ 252 012e 09       		.uleb128 0x9
+ 253 012f 72000000 		.4byte	0x72
+ 254 0133 02       		.byte	0x2
+ 255 0134 00       		.byte	0
+ 256 0135 0A       		.uleb128 0xa
+ 257 0136 C8000000 		.4byte	.LASF25
+ 258 013a 03       		.byte	0x3
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 8
+
+
+ 259 013b 5D       		.byte	0x5d
+ 260 013c C8000000 		.4byte	0xc8
+ 261 0140 06       		.uleb128 0x6
+ 262 0141 1C       		.byte	0x1c
+ 263 0142 03       		.byte	0x3
+ 264 0143 63       		.byte	0x63
+ 265 0144 B5010000 		.4byte	0x1b5
+ 266 0148 07       		.uleb128 0x7
+ 267 0149 66000000 		.4byte	.LASF26
+ 268 014d 03       		.byte	0x3
+ 269 014e 68       		.byte	0x68
+ 270 014f B5010000 		.4byte	0x1b5
+ 271 0153 00       		.byte	0
+ 272 0154 07       		.uleb128 0x7
+ 273 0155 06000000 		.4byte	.LASF27
+ 274 0159 03       		.byte	0x3
+ 275 015a 6D       		.byte	0x6d
+ 276 015b B5010000 		.4byte	0x1b5
+ 277 015f 04       		.byte	0x4
+ 278 0160 07       		.uleb128 0x7
+ 279 0161 83000000 		.4byte	.LASF28
+ 280 0165 03       		.byte	0x3
+ 281 0166 72       		.byte	0x72
+ 282 0167 B5010000 		.4byte	0x1b5
+ 283 016b 08       		.byte	0x8
+ 284 016c 07       		.uleb128 0x7
+ 285 016d C2000000 		.4byte	.LASF29
+ 286 0171 03       		.byte	0x3
+ 287 0172 77       		.byte	0x77
+ 288 0173 B5010000 		.4byte	0x1b5
+ 289 0177 0C       		.byte	0xc
+ 290 0178 07       		.uleb128 0x7
+ 291 0179 67010000 		.4byte	.LASF30
+ 292 017d 03       		.byte	0x3
+ 293 017e 7C       		.byte	0x7c
+ 294 017f 98000000 		.4byte	0x98
+ 295 0183 10       		.byte	0x10
+ 296 0184 07       		.uleb128 0x7
+ 297 0185 24000000 		.4byte	.LASF31
+ 298 0189 03       		.byte	0x3
+ 299 018a 81       		.byte	0x81
+ 300 018b 98000000 		.4byte	0x98
+ 301 018f 14       		.byte	0x14
+ 302 0190 07       		.uleb128 0x7
+ 303 0191 9B000000 		.4byte	.LASF32
+ 304 0195 03       		.byte	0x3
+ 305 0196 86       		.byte	0x86
+ 306 0197 80000000 		.4byte	0x80
+ 307 019b 18       		.byte	0x18
+ 308 019c 07       		.uleb128 0x7
+ 309 019d AC000000 		.4byte	.LASF33
+ 310 01a1 03       		.byte	0x3
+ 311 01a2 8B       		.byte	0x8b
+ 312 01a3 80000000 		.4byte	0x80
+ 313 01a7 19       		.byte	0x19
+ 314 01a8 07       		.uleb128 0x7
+ 315 01a9 02020000 		.4byte	.LASF34
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 9
+
+
+ 316 01ad 03       		.byte	0x3
+ 317 01ae 90       		.byte	0x90
+ 318 01af 80000000 		.4byte	0x80
+ 319 01b3 1A       		.byte	0x1a
+ 320 01b4 00       		.byte	0
+ 321 01b5 0B       		.uleb128 0xb
+ 322 01b6 04       		.byte	0x4
+ 323 01b7 B7000000 		.4byte	0xb7
+ 324 01bb 0A       		.uleb128 0xa
+ 325 01bc 52000000 		.4byte	.LASF35
+ 326 01c0 03       		.byte	0x3
+ 327 01c1 92       		.byte	0x92
+ 328 01c2 40010000 		.4byte	0x140
+ 329 01c6 0C       		.uleb128 0xc
+ 330 01c7 71010000 		.4byte	.LASF41
+ 331 01cb 01       		.byte	0x1
+ 332 01cc 85       		.byte	0x85
+ 333 01cd 00000000 		.4byte	.LFB1
+ 334 01d1 20000000 		.4byte	.LFE1-.LFB1
+ 335 01d5 01       		.uleb128 0x1
+ 336 01d6 9C       		.byte	0x9c
+ 337 01d7 F6010000 		.4byte	0x1f6
+ 338 01db 0D       		.uleb128 0xd
+ 339 01dc 0E000000 		.4byte	.LVL0
+ 340 01e0 32020000 		.4byte	0x232
+ 341 01e4 0E       		.uleb128 0xe
+ 342 01e5 01       		.uleb128 0x1
+ 343 01e6 50       		.byte	0x50
+ 344 01e7 02       		.uleb128 0x2
+ 345 01e8 74       		.byte	0x74
+ 346 01e9 00       		.sleb128 0
+ 347 01ea 0E       		.uleb128 0xe
+ 348 01eb 01       		.uleb128 0x1
+ 349 01ec 51       		.byte	0x51
+ 350 01ed 01       		.uleb128 0x1
+ 351 01ee 30       		.byte	0x30
+ 352 01ef 0E       		.uleb128 0xe
+ 353 01f0 01       		.uleb128 0x1
+ 354 01f1 52       		.byte	0x52
+ 355 01f2 01       		.uleb128 0x1
+ 356 01f3 42       		.byte	0x42
+ 357 01f4 00       		.byte	0
+ 358 01f5 00       		.byte	0
+ 359 01f6 0F       		.uleb128 0xf
+ 360 01f7 82010000 		.4byte	.LASF36
+ 361 01fb 01       		.byte	0x1
+ 362 01fc 40       		.byte	0x40
+ 363 01fd 35010000 		.4byte	0x135
+ 364 0201 05       		.uleb128 0x5
+ 365 0202 03       		.byte	0x3
+ 366 0203 00000000 		.4byte	ADC_dsRam
+ 367 0207 08       		.uleb128 0x8
+ 368 0208 17020000 		.4byte	0x217
+ 369 020c 17020000 		.4byte	0x217
+ 370 0210 09       		.uleb128 0x9
+ 371 0211 72000000 		.4byte	0x72
+ 372 0215 02       		.byte	0x2
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 10
+
+
+ 373 0216 00       		.byte	0
+ 374 0217 10       		.uleb128 0x10
+ 375 0218 BB010000 		.4byte	0x1bb
+ 376 021c 0F       		.uleb128 0xf
+ 377 021d 05010000 		.4byte	.LASF37
+ 378 0221 01       		.byte	0x1
+ 379 0222 4F       		.byte	0x4f
+ 380 0223 2D020000 		.4byte	0x22d
+ 381 0227 05       		.uleb128 0x5
+ 382 0228 03       		.byte	0x3
+ 383 0229 00000000 		.4byte	ADC_adcIoList
+ 384 022d 10       		.uleb128 0x10
+ 385 022e 07020000 		.4byte	0x207
+ 386 0232 11       		.uleb128 0x11
+ 387 0233 B4000000 		.4byte	.LASF42
+ 388 0237 B4000000 		.4byte	.LASF42
+ 389 023b 00       		.byte	0
+ 390              		.section	.debug_abbrev,"",%progbits
+ 391              	.Ldebug_abbrev0:
+ 392 0000 01       		.uleb128 0x1
+ 393 0001 11       		.uleb128 0x11
+ 394 0002 01       		.byte	0x1
+ 395 0003 25       		.uleb128 0x25
+ 396 0004 0E       		.uleb128 0xe
+ 397 0005 13       		.uleb128 0x13
+ 398 0006 0B       		.uleb128 0xb
+ 399 0007 03       		.uleb128 0x3
+ 400 0008 0E       		.uleb128 0xe
+ 401 0009 1B       		.uleb128 0x1b
+ 402 000a 0E       		.uleb128 0xe
+ 403 000b 55       		.uleb128 0x55
+ 404 000c 17       		.uleb128 0x17
+ 405 000d 11       		.uleb128 0x11
+ 406 000e 01       		.uleb128 0x1
+ 407 000f 10       		.uleb128 0x10
+ 408 0010 17       		.uleb128 0x17
+ 409 0011 00       		.byte	0
+ 410 0012 00       		.byte	0
+ 411 0013 02       		.uleb128 0x2
+ 412 0014 24       		.uleb128 0x24
+ 413 0015 00       		.byte	0
+ 414 0016 0B       		.uleb128 0xb
+ 415 0017 0B       		.uleb128 0xb
+ 416 0018 3E       		.uleb128 0x3e
+ 417 0019 0B       		.uleb128 0xb
+ 418 001a 03       		.uleb128 0x3
+ 419 001b 08       		.uleb128 0x8
+ 420 001c 00       		.byte	0
+ 421 001d 00       		.byte	0
+ 422 001e 03       		.uleb128 0x3
+ 423 001f 24       		.uleb128 0x24
+ 424 0020 00       		.byte	0
+ 425 0021 0B       		.uleb128 0xb
+ 426 0022 0B       		.uleb128 0xb
+ 427 0023 3E       		.uleb128 0x3e
+ 428 0024 0B       		.uleb128 0xb
+ 429 0025 03       		.uleb128 0x3
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 11
+
+
+ 430 0026 0E       		.uleb128 0xe
+ 431 0027 00       		.byte	0
+ 432 0028 00       		.byte	0
+ 433 0029 04       		.uleb128 0x4
+ 434 002a 16       		.uleb128 0x16
+ 435 002b 00       		.byte	0
+ 436 002c 03       		.uleb128 0x3
+ 437 002d 0E       		.uleb128 0xe
+ 438 002e 3A       		.uleb128 0x3a
+ 439 002f 0B       		.uleb128 0xb
+ 440 0030 3B       		.uleb128 0x3b
+ 441 0031 05       		.uleb128 0x5
+ 442 0032 49       		.uleb128 0x49
+ 443 0033 13       		.uleb128 0x13
+ 444 0034 00       		.byte	0
+ 445 0035 00       		.byte	0
+ 446 0036 05       		.uleb128 0x5
+ 447 0037 35       		.uleb128 0x35
+ 448 0038 00       		.byte	0
+ 449 0039 49       		.uleb128 0x49
+ 450 003a 13       		.uleb128 0x13
+ 451 003b 00       		.byte	0
+ 452 003c 00       		.byte	0
+ 453 003d 06       		.uleb128 0x6
+ 454 003e 13       		.uleb128 0x13
+ 455 003f 01       		.byte	0x1
+ 456 0040 0B       		.uleb128 0xb
+ 457 0041 0B       		.uleb128 0xb
+ 458 0042 3A       		.uleb128 0x3a
+ 459 0043 0B       		.uleb128 0xb
+ 460 0044 3B       		.uleb128 0x3b
+ 461 0045 0B       		.uleb128 0xb
+ 462 0046 01       		.uleb128 0x1
+ 463 0047 13       		.uleb128 0x13
+ 464 0048 00       		.byte	0
+ 465 0049 00       		.byte	0
+ 466 004a 07       		.uleb128 0x7
+ 467 004b 0D       		.uleb128 0xd
+ 468 004c 00       		.byte	0
+ 469 004d 03       		.uleb128 0x3
+ 470 004e 0E       		.uleb128 0xe
+ 471 004f 3A       		.uleb128 0x3a
+ 472 0050 0B       		.uleb128 0xb
+ 473 0051 3B       		.uleb128 0x3b
+ 474 0052 0B       		.uleb128 0xb
+ 475 0053 49       		.uleb128 0x49
+ 476 0054 13       		.uleb128 0x13
+ 477 0055 38       		.uleb128 0x38
+ 478 0056 0B       		.uleb128 0xb
+ 479 0057 00       		.byte	0
+ 480 0058 00       		.byte	0
+ 481 0059 08       		.uleb128 0x8
+ 482 005a 01       		.uleb128 0x1
+ 483 005b 01       		.byte	0x1
+ 484 005c 49       		.uleb128 0x49
+ 485 005d 13       		.uleb128 0x13
+ 486 005e 01       		.uleb128 0x1
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 12
+
+
+ 487 005f 13       		.uleb128 0x13
+ 488 0060 00       		.byte	0
+ 489 0061 00       		.byte	0
+ 490 0062 09       		.uleb128 0x9
+ 491 0063 21       		.uleb128 0x21
+ 492 0064 00       		.byte	0
+ 493 0065 49       		.uleb128 0x49
+ 494 0066 13       		.uleb128 0x13
+ 495 0067 2F       		.uleb128 0x2f
+ 496 0068 0B       		.uleb128 0xb
+ 497 0069 00       		.byte	0
+ 498 006a 00       		.byte	0
+ 499 006b 0A       		.uleb128 0xa
+ 500 006c 16       		.uleb128 0x16
+ 501 006d 00       		.byte	0
+ 502 006e 03       		.uleb128 0x3
+ 503 006f 0E       		.uleb128 0xe
+ 504 0070 3A       		.uleb128 0x3a
+ 505 0071 0B       		.uleb128 0xb
+ 506 0072 3B       		.uleb128 0x3b
+ 507 0073 0B       		.uleb128 0xb
+ 508 0074 49       		.uleb128 0x49
+ 509 0075 13       		.uleb128 0x13
+ 510 0076 00       		.byte	0
+ 511 0077 00       		.byte	0
+ 512 0078 0B       		.uleb128 0xb
+ 513 0079 0F       		.uleb128 0xf
+ 514 007a 00       		.byte	0
+ 515 007b 0B       		.uleb128 0xb
+ 516 007c 0B       		.uleb128 0xb
+ 517 007d 49       		.uleb128 0x49
+ 518 007e 13       		.uleb128 0x13
+ 519 007f 00       		.byte	0
+ 520 0080 00       		.byte	0
+ 521 0081 0C       		.uleb128 0xc
+ 522 0082 2E       		.uleb128 0x2e
+ 523 0083 01       		.byte	0x1
+ 524 0084 3F       		.uleb128 0x3f
+ 525 0085 19       		.uleb128 0x19
+ 526 0086 03       		.uleb128 0x3
+ 527 0087 0E       		.uleb128 0xe
+ 528 0088 3A       		.uleb128 0x3a
+ 529 0089 0B       		.uleb128 0xb
+ 530 008a 3B       		.uleb128 0x3b
+ 531 008b 0B       		.uleb128 0xb
+ 532 008c 27       		.uleb128 0x27
+ 533 008d 19       		.uleb128 0x19
+ 534 008e 11       		.uleb128 0x11
+ 535 008f 01       		.uleb128 0x1
+ 536 0090 12       		.uleb128 0x12
+ 537 0091 06       		.uleb128 0x6
+ 538 0092 40       		.uleb128 0x40
+ 539 0093 18       		.uleb128 0x18
+ 540 0094 9742     		.uleb128 0x2117
+ 541 0096 19       		.uleb128 0x19
+ 542 0097 01       		.uleb128 0x1
+ 543 0098 13       		.uleb128 0x13
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 13
+
+
+ 544 0099 00       		.byte	0
+ 545 009a 00       		.byte	0
+ 546 009b 0D       		.uleb128 0xd
+ 547 009c 898201   		.uleb128 0x4109
+ 548 009f 01       		.byte	0x1
+ 549 00a0 11       		.uleb128 0x11
+ 550 00a1 01       		.uleb128 0x1
+ 551 00a2 31       		.uleb128 0x31
+ 552 00a3 13       		.uleb128 0x13
+ 553 00a4 00       		.byte	0
+ 554 00a5 00       		.byte	0
+ 555 00a6 0E       		.uleb128 0xe
+ 556 00a7 8A8201   		.uleb128 0x410a
+ 557 00aa 00       		.byte	0
+ 558 00ab 02       		.uleb128 0x2
+ 559 00ac 18       		.uleb128 0x18
+ 560 00ad 9142     		.uleb128 0x2111
+ 561 00af 18       		.uleb128 0x18
+ 562 00b0 00       		.byte	0
+ 563 00b1 00       		.byte	0
+ 564 00b2 0F       		.uleb128 0xf
+ 565 00b3 34       		.uleb128 0x34
+ 566 00b4 00       		.byte	0
+ 567 00b5 03       		.uleb128 0x3
+ 568 00b6 0E       		.uleb128 0xe
+ 569 00b7 3A       		.uleb128 0x3a
+ 570 00b8 0B       		.uleb128 0xb
+ 571 00b9 3B       		.uleb128 0x3b
+ 572 00ba 0B       		.uleb128 0xb
+ 573 00bb 49       		.uleb128 0x49
+ 574 00bc 13       		.uleb128 0x13
+ 575 00bd 3F       		.uleb128 0x3f
+ 576 00be 19       		.uleb128 0x19
+ 577 00bf 02       		.uleb128 0x2
+ 578 00c0 18       		.uleb128 0x18
+ 579 00c1 00       		.byte	0
+ 580 00c2 00       		.byte	0
+ 581 00c3 10       		.uleb128 0x10
+ 582 00c4 26       		.uleb128 0x26
+ 583 00c5 00       		.byte	0
+ 584 00c6 49       		.uleb128 0x49
+ 585 00c7 13       		.uleb128 0x13
+ 586 00c8 00       		.byte	0
+ 587 00c9 00       		.byte	0
+ 588 00ca 11       		.uleb128 0x11
+ 589 00cb 2E       		.uleb128 0x2e
+ 590 00cc 00       		.byte	0
+ 591 00cd 3F       		.uleb128 0x3f
+ 592 00ce 19       		.uleb128 0x19
+ 593 00cf 3C       		.uleb128 0x3c
+ 594 00d0 19       		.uleb128 0x19
+ 595 00d1 6E       		.uleb128 0x6e
+ 596 00d2 0E       		.uleb128 0xe
+ 597 00d3 03       		.uleb128 0x3
+ 598 00d4 0E       		.uleb128 0xe
+ 599 00d5 00       		.byte	0
+ 600 00d6 00       		.byte	0
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 14
+
+
+ 601 00d7 00       		.byte	0
+ 602              		.section	.debug_aranges,"",%progbits
+ 603 0000 1C000000 		.4byte	0x1c
+ 604 0004 0200     		.2byte	0x2
+ 605 0006 00000000 		.4byte	.Ldebug_info0
+ 606 000a 04       		.byte	0x4
+ 607 000b 00       		.byte	0
+ 608 000c 0000     		.2byte	0
+ 609 000e 0000     		.2byte	0
+ 610 0010 00000000 		.4byte	.LFB1
+ 611 0014 20000000 		.4byte	.LFE1-.LFB1
+ 612 0018 00000000 		.4byte	0
+ 613 001c 00000000 		.4byte	0
+ 614              		.section	.debug_ranges,"",%progbits
+ 615              	.Ldebug_ranges0:
+ 616 0000 00000000 		.4byte	.LFB1
+ 617 0004 20000000 		.4byte	.LFE1
+ 618 0008 00000000 		.4byte	0
+ 619 000c 00000000 		.4byte	0
+ 620              		.section	.debug_line,"",%progbits
+ 621              	.Ldebug_line0:
+ 622 0000 78000000 		.section	.debug_str,"MS",%progbits,1
+ 622      02005D00 
+ 622      00000201 
+ 622      FB0E0D00 
+ 622      01010101 
+ 623              	.LASF17:
+ 624 0000 72656733 		.ascii	"reg32\000"
+ 624      3200
+ 625              	.LASF27:
+ 626 0006 70635074 		.ascii	"pcPtr\000"
+ 626      7200
+ 627              	.LASF24:
+ 628 000c 61646341 		.ascii	"adcAzTime\000"
+ 628      7A54696D 
+ 628      6500
+ 629              	.LASF23:
+ 630 0016 61646352 		.ascii	"adcResolution\000"
+ 630      65736F6C 
+ 630      7574696F 
+ 630      6E00
+ 631              	.LASF31:
+ 632 0024 6D61736B 		.ascii	"mask\000"
+ 632      00
+ 633              	.LASF20:
+ 634 0029 61646353 		.ascii	"adcStatus\000"
+ 634      74617475 
+ 634      7300
+ 635              	.LASF6:
+ 636 0033 73686F72 		.ascii	"short unsigned int\000"
+ 636      7420756E 
+ 636      7369676E 
+ 636      65642069 
+ 636      6E7400
+ 637              	.LASF22:
+ 638 0046 61646341 		.ascii	"adcActiveCh\000"
+ 638      63746976 
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 15
+
+
+ 638      65436800 
+ 639              	.LASF35:
+ 640 0052 4144435F 		.ascii	"ADC_FLASH_IO_STRUCT\000"
+ 640      464C4153 
+ 640      485F494F 
+ 640      5F535452 
+ 640      55435400 
+ 641              	.LASF26:
+ 642 0066 6873696F 		.ascii	"hsiomPtr\000"
+ 642      6D507472 
+ 642      00
+ 643              	.LASF15:
+ 644 006f 666C6F61 		.ascii	"float\000"
+ 644      7400
+ 645              	.LASF4:
+ 646 0075 756E7369 		.ascii	"unsigned char\000"
+ 646      676E6564 
+ 646      20636861 
+ 646      7200
+ 647              	.LASF28:
+ 648 0083 64725074 		.ascii	"drPtr\000"
+ 648      7200
+ 649              	.LASF8:
+ 650 0089 6C6F6E67 		.ascii	"long unsigned int\000"
+ 650      20756E73 
+ 650      69676E65 
+ 650      6420696E 
+ 650      7400
+ 651              	.LASF32:
+ 652 009b 6873696F 		.ascii	"hsiomShift\000"
+ 652      6D536869 
+ 652      667400
+ 653              	.LASF12:
+ 654 00a6 75696E74 		.ascii	"uint8\000"
+ 654      3800
+ 655              	.LASF33:
+ 656 00ac 64725368 		.ascii	"drShift\000"
+ 656      69667400 
+ 657              	.LASF42:
+ 658 00b4 6D656D73 		.ascii	"memset\000"
+ 658      657400
+ 659              	.LASF16:
+ 660 00bb 646F7562 		.ascii	"double\000"
+ 660      6C6500
+ 661              	.LASF29:
+ 662 00c2 70735074 		.ascii	"psPtr\000"
+ 662      7200
+ 663              	.LASF25:
+ 664 00c8 4144435F 		.ascii	"ADC_RAM_STRUCT\000"
+ 664      52414D5F 
+ 664      53545255 
+ 664      435400
+ 665              	.LASF13:
+ 666 00d7 75696E74 		.ascii	"uint16\000"
+ 666      313600
+ 667              	.LASF39:
+ 668 00de 47656E65 		.ascii	"Generated_Source\\PSoC4\\ADC_Structure.c\000"
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 16
+
+
+ 668      72617465 
+ 668      645F536F 
+ 668      75726365 
+ 668      5C50536F 
+ 669              	.LASF37:
+ 670 0105 4144435F 		.ascii	"ADC_adcIoList\000"
+ 670      61646349 
+ 670      6F4C6973 
+ 670      7400
+ 671              	.LASF14:
+ 672 0113 75696E74 		.ascii	"uint32\000"
+ 672      333200
+ 673              	.LASF0:
+ 674 011a 756E7369 		.ascii	"unsigned int\000"
+ 674      676E6564 
+ 674      20696E74 
+ 674      00
+ 675              	.LASF9:
+ 676 0127 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 676      206C6F6E 
+ 676      6720756E 
+ 676      7369676E 
+ 676      65642069 
+ 677              	.LASF21:
+ 678 013e 61646349 		.ascii	"adcIdac\000"
+ 678      64616300 
+ 679              	.LASF18:
+ 680 0146 61646352 		.ascii	"adcResult\000"
+ 680      6573756C 
+ 680      7400
+ 681              	.LASF10:
+ 682 0150 73697A65 		.ascii	"sizetype\000"
+ 682      74797065 
+ 682      00
+ 683              	.LASF1:
+ 684 0159 6C6F6E67 		.ascii	"long long int\000"
+ 684      206C6F6E 
+ 684      6720696E 
+ 684      7400
+ 685              	.LASF30:
+ 686 0167 6873696F 		.ascii	"hsiomMask\000"
+ 686      6D4D6173 
+ 686      6B00
+ 687              	.LASF41:
+ 688 0171 4144435F 		.ascii	"ADC_DsInitialize\000"
+ 688      4473496E 
+ 688      69746961 
+ 688      6C697A65 
+ 688      00
+ 689              	.LASF36:
+ 690 0182 4144435F 		.ascii	"ADC_dsRam\000"
+ 690      64735261 
+ 690      6D00
+ 691              	.LASF19:
+ 692 018c 61646343 		.ascii	"adcCode\000"
+ 692      6F646500 
+ 693              	.LASF5:
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\ccjFf6A6.s 			page 17
+
+
+ 694 0194 73686F72 		.ascii	"short int\000"
+ 694      7420696E 
+ 694      7400
+ 695              	.LASF40:
+ 696 019e 433A5C55 		.ascii	"C:\\Users\\Ryan\\ownCloud\\Projects\\EEforEveryone\\"
+ 696      73657273 
+ 696      5C527961 
+ 696      6E5C6F77 
+ 696      6E436C6F 
+ 697 01cc 32303232 		.ascii	"2022\\2201_MOTOR\\sw\\4_PSoC\\2201_Motor\\2201_Moto"
+ 697      5C323230 
+ 697      315F4D4F 
+ 697      544F525C 
+ 697      73775C34 
+ 698 01fa 722E6379 		.ascii	"r.cydsn\000"
+ 698      64736E00 
+ 699              	.LASF34:
+ 700 0202 73686966 		.ascii	"shift\000"
+ 700      7400
+ 701              	.LASF7:
+ 702 0208 6C6F6E67 		.ascii	"long int\000"
+ 702      20696E74 
+ 702      00
+ 703              	.LASF11:
+ 704 0211 63686172 		.ascii	"char\000"
+ 704      00
+ 705              	.LASF2:
+ 706 0216 6C6F6E67 		.ascii	"long double\000"
+ 706      20646F75 
+ 706      626C6500 
+ 707              	.LASF38:
+ 708 0222 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 708      43313120 
+ 708      352E342E 
+ 708      31203230 
+ 708      31363036 
+ 709 0255 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0plus -mthumb -"
+ 709      20726576 
+ 709      6973696F 
+ 709      6E203233 
+ 709      37373135 
+ 710 0288 67202D4F 		.ascii	"g -Og -ffunction-sections -ffat-lto-objects\000"
+ 710      67202D66 
+ 710      66756E63 
+ 710      74696F6E 
+ 710      2D736563 
+ 711              	.LASF3:
+ 712 02b4 7369676E 		.ascii	"signed char\000"
+ 712      65642063 
+ 712      68617200 
+ 713              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

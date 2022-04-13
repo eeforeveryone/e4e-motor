@@ -1,0 +1,73 @@
+
+
+//#TODO: Handle Position Rollover Better!
+//#TODO: Wave Shaping and better tuning of control loops
+
+#include "position_ctrl.h"
+
+
+position_ctrl::position_ctrl(int motA, int motB, int encA, int encB, uint8_t PulsePerRotation, uint8_t GearRatio):mySpeedCtrl(encA, encB, PulsePerRotation, GearRatio, motA,motB) { //constructor, pass in 2 pwm pins, plus 
+  TARGET_position = 0;
+  maxSpeed = 3600; //set to 1 rot/second
+  maxAccel = 3600; //set to 1 rot/second^2
+  moving = false;
+}
+
+void position_ctrl::SetMaxSpeed(uint16_t NewSpeed){
+  maxSpeed = NewSpeed;
+}
+void position_ctrl::SetMaxAccel(uint16_t NewAccel){
+  maxAccel = NewAccel;
+}
+bool position_ctrl::Done(){
+  return moving;
+}
+
+void position_ctrl::Go(long NewPosition){
+  TARGET_position = NewPosition;
+}
+
+
+int position_ctrl::Run(){
+
+  long Position_error = mySpeedCtrl.GetPos() - TARGET_position;
+  
+  if(Position_error > 50){ //if more then 5deg of error
+    mySpeedCtrl.SetSpeed((long)maxSpeed*-1L);
+  }else if (Position_error > 0){ //if slightly off
+    mySpeedCtrl.SetSpeed((long)maxSpeed*-1L*Position_error/50L); //scale error
+  }
+  
+  (Position_error < -50){ //if more then -5deg of error
+    mySpeedCtrl.SetSpeed((long)maxSpeed);
+  }
+  
+  return (mySpeedCtrl.Run()); //Pass through SpeedCtrl Pass/Fail Code
+}
+
+
+
+
+
+/*public:
+    position_ctrl(int motA, int motB, int encA, int encB, uint8_t PulsePerRotation, uint8_t GearRatio);
+    void SetMaxSpeed(uint16_t NewSpeed); //Max Speed, In tenths of Degrees per second.
+    void SetMaxAccel(uint16_t NewAccel); //Max Acceleration, in tenths of Degrees per second^2
+    void ResetHome(); //reset all positions to home
+
+
+void Go(long NewPosition); //go to the specified position, in rots/second
+    bool Done(); //Returns 1 when motion is done
+
+    int Run(); //Runs the control loop for position regulation. Returns 1 if OK, -1 if CTRL Time is not happy
+ 
+private:
+  speed_ctrl mySpeedCtrl;
+  motor mymotor;
+  
+uint16_t maxSpeed;
+  uint16_t maxAccel;
+  long TARGET_position; 
+  */
+
+  

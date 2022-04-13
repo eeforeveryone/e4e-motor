@@ -1,0 +1,148 @@
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/CortexM0p/ARM_GCC_541/Debug/main.o : E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A0.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A0_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A1.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A1_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A2.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A2_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A3.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A3_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A4.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A4_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_Adc.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_Configuration.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_ISR.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_Sensing.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_Structure.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CLK.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CLK_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CW_CCW.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CW_CCW_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/Clock_ENC.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/Clock_pwm.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CyFlash.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CyLFClk.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CyLib.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ENABLE.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ENABLE_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ENC.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/LED_ACT.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/LED_ACT_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/M1_ISR.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/M1_PWM.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/MODE0.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/MODE0_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/MODE1.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/MODE1_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/N_MOTrst.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/N_MOTrst_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/SYSTCK_ISR.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/SYSTCK_TIMER.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/TX_EN.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/TX_EN_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_BOOT.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_PINS.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_PVT.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_SCBCLK.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_SCB_IRQ.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_SPI_UART.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_SPI_UART_PVT.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_rx.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_rx_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_tx.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_tx_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cmsis_armcc.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cmsis_compiler.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cmsis_gcc.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/core_cm0plus.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/core_cm0plus_psoc4.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cyPm.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cy_em_eeprom.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cydevice_trm.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cydisabledsheets.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cyfitter.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cyfitter_cfg.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cypins.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cytypes.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/encA.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/encA_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/encB.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/encB_aliases.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/project.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/EEmotor.h E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/main.c 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A0.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A0_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A1.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A1_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A2.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A2_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A3.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A3_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A4.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/A4_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_Adc.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_Configuration.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_ISR.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_Sensing.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ADC_Structure.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CLK.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CLK_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CW_CCW.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CW_CCW_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/Clock_ENC.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/Clock_pwm.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CyFlash.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CyLFClk.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/CyLib.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ENABLE.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ENABLE_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/ENC.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/LED_ACT.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/LED_ACT_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/M1_ISR.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/M1_PWM.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/MODE0.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/MODE0_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/MODE1.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/MODE1_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/N_MOTrst.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/N_MOTrst_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/SYSTCK_ISR.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/SYSTCK_TIMER.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/TX_EN.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/TX_EN_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_BOOT.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_PINS.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_PVT.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_SCBCLK.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_SCB_IRQ.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_SPI_UART.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_SPI_UART_PVT.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_rx.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_rx_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_tx.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/UART_tx_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cmsis_armcc.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cmsis_compiler.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cmsis_gcc.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/core_cm0plus.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/core_cm0plus_psoc4.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cyPm.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cy_em_eeprom.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cydevice_trm.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cydisabledsheets.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cyfitter.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cyfitter_cfg.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cypins.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/cytypes.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/encA.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/encA_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/encB.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/encB_aliases.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/Generated_Source/PSoC4/project.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/EEmotor.h : 
+
+E:/Projects/EEforEveryone/2022/2201_MOTOR/sw/4_PSoC/2201_Motor/2202_Stepper.cydsn/main.c : 
+

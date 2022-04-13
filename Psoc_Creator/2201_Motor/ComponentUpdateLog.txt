@@ -1,0 +1,15 @@
+Last Modified Date & Time: 03/02/2022 15:55:19
+
+PSoC 4ModbusSlave: PSoC 4ModbusSlave.cydwr
+	cy_boot [v5.20] to [v6.10]
+	cy_lfclk [v1.0] to [v1.20]
+	LIN_Dynamic [v3.20] to [v6.0]
+
+PSoC 4ModbusSlave: TopDesign.cysch
+	LCD_Char [v2.10] to [v2.20]
+	Rx_Isr [v1.70] to [v1.71]
+	Rx_1 [v2.10] to [v2.20]
+	Tx_1 [v2.10] to [v2.20]
+	TxEn [v2.10] to [v2.20]
+
+

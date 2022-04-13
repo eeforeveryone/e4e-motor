@@ -1,0 +1,564 @@
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m0plus
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"ModbusData.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	inputReg
+  20              		.global	holdingReg
+  21              		.global	inputCoils
+  22              		.global	coils
+  23              		.comm	response,20,4
+  24              		.comm	received,20,4
+  25              		.comm	messageLengthNotChanged,1,1
+  26              		.comm	messageLength,1,1
+  27              		.comm	modbusMessage,1,1
+  28              		.global	SlaveAddress
+  29              		.data
+  30              		.align	2
+  31              		.type	inputReg, %object
+  32              		.size	inputReg, 40
+  33              	inputReg:
+  34 0000 01300000 		.word	12289
+  35 0004 02300000 		.word	12290
+  36 0008 03300000 		.word	12291
+  37 000c 04300000 		.word	12292
+  38 0010 05300000 		.word	12293
+  39 0014 06300000 		.word	12294
+  40 0018 07300000 		.word	12295
+  41 001c 08300000 		.word	12296
+  42 0020 09300000 		.word	12297
+  43 0024 0A300000 		.word	12298
+  44              		.type	holdingReg, %object
+  45              		.size	holdingReg, 40
+  46              	holdingReg:
+  47 0028 01100000 		.word	4097
+  48 002c 02100000 		.word	4098
+  49 0030 03100000 		.word	4099
+  50 0034 04100000 		.word	4100
+  51 0038 05100000 		.word	4101
+  52 003c 06100000 		.word	4102
+  53 0040 07000000 		.word	7
+  54 0044 08000000 		.word	8
+  55 0048 09000000 		.word	9
+  56 004c 0A000000 		.word	10
+  57              		.type	inputCoils, %object
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 2
+
+
+  58              		.size	inputCoils, 1
+  59              	inputCoils:
+  60 0050 01       		.byte	1
+  61 0051 000000   		.space	3
+  62              		.type	coils, %object
+  63              		.size	coils, 10
+  64              	coils:
+  65 0054 01       		.byte	1
+  66 0055 01       		.byte	1
+  67 0056 00       		.byte	0
+  68 0057 00       		.byte	0
+  69 0058 01       		.byte	1
+  70 0059 01       		.byte	1
+  71 005a 00       		.byte	0
+  72 005b 00       		.byte	0
+  73 005c 01       		.byte	1
+  74 005d 00       		.space	1
+  75              		.type	SlaveAddress, %object
+  76              		.size	SlaveAddress, 1
+  77              	SlaveAddress:
+  78 005e 01       		.byte	1
+  79              		.text
+  80              	.Letext0:
+  81              		.file 1 "Generated_Source\\PSoC4/cytypes.h"
+  82              		.file 2 "ModbusData.c"
+  83              		.section	.debug_info,"",%progbits
+  84              	.Ldebug_info0:
+  85 0000 8F010000 		.4byte	0x18f
+  86 0004 0400     		.2byte	0x4
+  87 0006 00000000 		.4byte	.Ldebug_abbrev0
+  88 000a 04       		.byte	0x4
+  89 000b 01       		.uleb128 0x1
+  90 000c EE000000 		.4byte	.LASF26
+  91 0010 0C       		.byte	0xc
+  92 0011 07020000 		.4byte	.LASF27
+  93 0015 5B000000 		.4byte	.LASF28
+  94 0019 00000000 		.4byte	.Ldebug_line0
+  95 001d 02       		.uleb128 0x2
+  96 001e 01       		.byte	0x1
+  97 001f 06       		.byte	0x6
+  98 0020 4A000000 		.4byte	.LASF0
+  99 0024 02       		.uleb128 0x2
+ 100 0025 01       		.byte	0x1
+ 101 0026 08       		.byte	0x8
+ 102 0027 33000000 		.4byte	.LASF1
+ 103 002b 02       		.uleb128 0x2
+ 104 002c 02       		.byte	0x2
+ 105 002d 05       		.byte	0x5
+ 106 002e FD010000 		.4byte	.LASF2
+ 107 0032 02       		.uleb128 0x2
+ 108 0033 02       		.byte	0x2
+ 109 0034 07       		.byte	0x7
+ 110 0035 B7010000 		.4byte	.LASF3
+ 111 0039 02       		.uleb128 0x2
+ 112 003a 04       		.byte	0x4
+ 113 003b 05       		.byte	0x5
+ 114 003c 85010000 		.4byte	.LASF4
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 3
+
+
+ 115 0040 02       		.uleb128 0x2
+ 116 0041 04       		.byte	0x4
+ 117 0042 07       		.byte	0x7
+ 118 0043 B7000000 		.4byte	.LASF5
+ 119 0047 02       		.uleb128 0x2
+ 120 0048 08       		.byte	0x8
+ 121 0049 05       		.byte	0x5
+ 122 004a 00000000 		.4byte	.LASF6
+ 123 004e 02       		.uleb128 0x2
+ 124 004f 08       		.byte	0x8
+ 125 0050 07       		.byte	0x7
+ 126 0051 C9000000 		.4byte	.LASF7
+ 127 0055 03       		.uleb128 0x3
+ 128 0056 04       		.byte	0x4
+ 129 0057 05       		.byte	0x5
+ 130 0058 696E7400 		.ascii	"int\000"
+ 131 005c 02       		.uleb128 0x2
+ 132 005d 04       		.byte	0x4
+ 133 005e 07       		.byte	0x7
+ 134 005f 26000000 		.4byte	.LASF8
+ 135 0063 04       		.uleb128 0x4
+ 136 0064 B1000000 		.4byte	.LASF9
+ 137 0068 01       		.byte	0x1
+ 138 0069 FB01     		.2byte	0x1fb
+ 139 006b 24000000 		.4byte	0x24
+ 140 006f 04       		.uleb128 0x4
+ 141 0070 56000000 		.4byte	.LASF10
+ 142 0074 01       		.byte	0x1
+ 143 0075 FE01     		.2byte	0x1fe
+ 144 0077 1D000000 		.4byte	0x1d
+ 145 007b 02       		.uleb128 0x2
+ 146 007c 04       		.byte	0x4
+ 147 007d 04       		.byte	0x4
+ 148 007e F7010000 		.4byte	.LASF11
+ 149 0082 02       		.uleb128 0x2
+ 150 0083 08       		.byte	0x8
+ 151 0084 04       		.byte	0x4
+ 152 0085 A3010000 		.4byte	.LASF12
+ 153 0089 02       		.uleb128 0x2
+ 154 008a 01       		.byte	0x1
+ 155 008b 08       		.byte	0x8
+ 156 008c 80010000 		.4byte	.LASF13
+ 157 0090 05       		.uleb128 0x5
+ 158 0091 63000000 		.4byte	0x63
+ 159 0095 02       		.uleb128 0x2
+ 160 0096 08       		.byte	0x8
+ 161 0097 04       		.byte	0x4
+ 162 0098 97010000 		.4byte	.LASF14
+ 163 009c 02       		.uleb128 0x2
+ 164 009d 04       		.byte	0x4
+ 165 009e 07       		.byte	0x7
+ 166 009f 14020000 		.4byte	.LASF15
+ 167 00a3 06       		.uleb128 0x6
+ 168 00a4 24000000 		.4byte	0x24
+ 169 00a8 B3000000 		.4byte	0xb3
+ 170 00ac 07       		.uleb128 0x7
+ 171 00ad 9C000000 		.4byte	0x9c
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 4
+
+
+ 172 00b1 00       		.byte	0
+ 173 00b2 00       		.byte	0
+ 174 00b3 08       		.uleb128 0x8
+ 175 00b4 AA010000 		.4byte	.LASF16
+ 176 00b8 02       		.byte	0x2
+ 177 00b9 12       		.byte	0x12
+ 178 00ba 24000000 		.4byte	0x24
+ 179 00be 05       		.uleb128 0x5
+ 180 00bf 03       		.byte	0x3
+ 181 00c0 00000000 		.4byte	SlaveAddress
+ 182 00c4 06       		.uleb128 0x6
+ 183 00c5 24000000 		.4byte	0x24
+ 184 00c9 D4000000 		.4byte	0xd4
+ 185 00cd 07       		.uleb128 0x7
+ 186 00ce 9C000000 		.4byte	0x9c
+ 187 00d2 13       		.byte	0x13
+ 188 00d3 00       		.byte	0
+ 189 00d4 08       		.uleb128 0x8
+ 190 00d5 41000000 		.4byte	.LASF17
+ 191 00d9 02       		.byte	0x2
+ 192 00da 1C       		.byte	0x1c
+ 193 00db C4000000 		.4byte	0xc4
+ 194 00df 05       		.uleb128 0x5
+ 195 00e0 03       		.byte	0x3
+ 196 00e1 00000000 		.4byte	received
+ 197 00e5 08       		.uleb128 0x8
+ 198 00e6 D8010000 		.4byte	.LASF18
+ 199 00ea 02       		.byte	0x2
+ 200 00eb 1D       		.byte	0x1d
+ 201 00ec C4000000 		.4byte	0xc4
+ 202 00f0 05       		.uleb128 0x5
+ 203 00f1 03       		.byte	0x3
+ 204 00f2 00000000 		.4byte	response
+ 205 00f6 08       		.uleb128 0x8
+ 206 00f7 EC010000 		.4byte	.LASF19
+ 207 00fb 02       		.byte	0x2
+ 208 00fc 21       		.byte	0x21
+ 209 00fd A3000000 		.4byte	0xa3
+ 210 0101 05       		.uleb128 0x5
+ 211 0102 03       		.byte	0x3
+ 212 0103 00000000 		.4byte	inputCoils
+ 213 0107 06       		.uleb128 0x6
+ 214 0108 5C000000 		.4byte	0x5c
+ 215 010c 17010000 		.4byte	0x117
+ 216 0110 07       		.uleb128 0x7
+ 217 0111 9C000000 		.4byte	0x9c
+ 218 0115 09       		.byte	0x9
+ 219 0116 00       		.byte	0
+ 220 0117 08       		.uleb128 0x8
+ 221 0118 E1010000 		.4byte	.LASF20
+ 222 011c 02       		.byte	0x2
+ 223 011d 22       		.byte	0x22
+ 224 011e 07010000 		.4byte	0x107
+ 225 0122 05       		.uleb128 0x5
+ 226 0123 03       		.byte	0x3
+ 227 0124 00000000 		.4byte	holdingReg
+ 228 0128 08       		.uleb128 0x8
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 5
+
+
+ 229 0129 8E010000 		.4byte	.LASF21
+ 230 012d 02       		.byte	0x2
+ 231 012e 23       		.byte	0x23
+ 232 012f 07010000 		.4byte	0x107
+ 233 0133 05       		.uleb128 0x5
+ 234 0134 03       		.byte	0x3
+ 235 0135 00000000 		.4byte	inputReg
+ 236 0139 06       		.uleb128 0x6
+ 237 013a 24000000 		.4byte	0x24
+ 238 013e 49010000 		.4byte	0x149
+ 239 0142 07       		.uleb128 0x7
+ 240 0143 9C000000 		.4byte	0x9c
+ 241 0147 09       		.byte	0x9
+ 242 0148 00       		.byte	0
+ 243 0149 08       		.uleb128 0x8
+ 244 014a AB000000 		.4byte	.LASF22
+ 245 014e 02       		.byte	0x2
+ 246 014f 20       		.byte	0x20
+ 247 0150 39010000 		.4byte	0x139
+ 248 0154 05       		.uleb128 0x5
+ 249 0155 03       		.byte	0x3
+ 250 0156 00000000 		.4byte	coils
+ 251 015a 08       		.uleb128 0x8
+ 252 015b CA010000 		.4byte	.LASF23
+ 253 015f 02       		.byte	0x2
+ 254 0160 17       		.byte	0x17
+ 255 0161 90000000 		.4byte	0x90
+ 256 0165 05       		.uleb128 0x5
+ 257 0166 03       		.byte	0x3
+ 258 0167 00000000 		.4byte	modbusMessage
+ 259 016b 08       		.uleb128 0x8
+ 260 016c E0000000 		.4byte	.LASF24
+ 261 0170 02       		.byte	0x2
+ 262 0171 18       		.byte	0x18
+ 263 0172 90000000 		.4byte	0x90
+ 264 0176 05       		.uleb128 0x5
+ 265 0177 03       		.byte	0x3
+ 266 0178 00000000 		.4byte	messageLength
+ 267 017c 08       		.uleb128 0x8
+ 268 017d 0E000000 		.4byte	.LASF25
+ 269 0181 02       		.byte	0x2
+ 270 0182 19       		.byte	0x19
+ 271 0183 8D010000 		.4byte	0x18d
+ 272 0187 05       		.uleb128 0x5
+ 273 0188 03       		.byte	0x3
+ 274 0189 00000000 		.4byte	messageLengthNotChanged
+ 275 018d 05       		.uleb128 0x5
+ 276 018e 6F000000 		.4byte	0x6f
+ 277 0192 00       		.byte	0
+ 278              		.section	.debug_abbrev,"",%progbits
+ 279              	.Ldebug_abbrev0:
+ 280 0000 01       		.uleb128 0x1
+ 281 0001 11       		.uleb128 0x11
+ 282 0002 01       		.byte	0x1
+ 283 0003 25       		.uleb128 0x25
+ 284 0004 0E       		.uleb128 0xe
+ 285 0005 13       		.uleb128 0x13
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 6
+
+
+ 286 0006 0B       		.uleb128 0xb
+ 287 0007 03       		.uleb128 0x3
+ 288 0008 0E       		.uleb128 0xe
+ 289 0009 1B       		.uleb128 0x1b
+ 290 000a 0E       		.uleb128 0xe
+ 291 000b 10       		.uleb128 0x10
+ 292 000c 17       		.uleb128 0x17
+ 293 000d 00       		.byte	0
+ 294 000e 00       		.byte	0
+ 295 000f 02       		.uleb128 0x2
+ 296 0010 24       		.uleb128 0x24
+ 297 0011 00       		.byte	0
+ 298 0012 0B       		.uleb128 0xb
+ 299 0013 0B       		.uleb128 0xb
+ 300 0014 3E       		.uleb128 0x3e
+ 301 0015 0B       		.uleb128 0xb
+ 302 0016 03       		.uleb128 0x3
+ 303 0017 0E       		.uleb128 0xe
+ 304 0018 00       		.byte	0
+ 305 0019 00       		.byte	0
+ 306 001a 03       		.uleb128 0x3
+ 307 001b 24       		.uleb128 0x24
+ 308 001c 00       		.byte	0
+ 309 001d 0B       		.uleb128 0xb
+ 310 001e 0B       		.uleb128 0xb
+ 311 001f 3E       		.uleb128 0x3e
+ 312 0020 0B       		.uleb128 0xb
+ 313 0021 03       		.uleb128 0x3
+ 314 0022 08       		.uleb128 0x8
+ 315 0023 00       		.byte	0
+ 316 0024 00       		.byte	0
+ 317 0025 04       		.uleb128 0x4
+ 318 0026 16       		.uleb128 0x16
+ 319 0027 00       		.byte	0
+ 320 0028 03       		.uleb128 0x3
+ 321 0029 0E       		.uleb128 0xe
+ 322 002a 3A       		.uleb128 0x3a
+ 323 002b 0B       		.uleb128 0xb
+ 324 002c 3B       		.uleb128 0x3b
+ 325 002d 05       		.uleb128 0x5
+ 326 002e 49       		.uleb128 0x49
+ 327 002f 13       		.uleb128 0x13
+ 328 0030 00       		.byte	0
+ 329 0031 00       		.byte	0
+ 330 0032 05       		.uleb128 0x5
+ 331 0033 35       		.uleb128 0x35
+ 332 0034 00       		.byte	0
+ 333 0035 49       		.uleb128 0x49
+ 334 0036 13       		.uleb128 0x13
+ 335 0037 00       		.byte	0
+ 336 0038 00       		.byte	0
+ 337 0039 06       		.uleb128 0x6
+ 338 003a 01       		.uleb128 0x1
+ 339 003b 01       		.byte	0x1
+ 340 003c 49       		.uleb128 0x49
+ 341 003d 13       		.uleb128 0x13
+ 342 003e 01       		.uleb128 0x1
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 7
+
+
+ 343 003f 13       		.uleb128 0x13
+ 344 0040 00       		.byte	0
+ 345 0041 00       		.byte	0
+ 346 0042 07       		.uleb128 0x7
+ 347 0043 21       		.uleb128 0x21
+ 348 0044 00       		.byte	0
+ 349 0045 49       		.uleb128 0x49
+ 350 0046 13       		.uleb128 0x13
+ 351 0047 2F       		.uleb128 0x2f
+ 352 0048 0B       		.uleb128 0xb
+ 353 0049 00       		.byte	0
+ 354 004a 00       		.byte	0
+ 355 004b 08       		.uleb128 0x8
+ 356 004c 34       		.uleb128 0x34
+ 357 004d 00       		.byte	0
+ 358 004e 03       		.uleb128 0x3
+ 359 004f 0E       		.uleb128 0xe
+ 360 0050 3A       		.uleb128 0x3a
+ 361 0051 0B       		.uleb128 0xb
+ 362 0052 3B       		.uleb128 0x3b
+ 363 0053 0B       		.uleb128 0xb
+ 364 0054 49       		.uleb128 0x49
+ 365 0055 13       		.uleb128 0x13
+ 366 0056 3F       		.uleb128 0x3f
+ 367 0057 19       		.uleb128 0x19
+ 368 0058 02       		.uleb128 0x2
+ 369 0059 18       		.uleb128 0x18
+ 370 005a 00       		.byte	0
+ 371 005b 00       		.byte	0
+ 372 005c 00       		.byte	0
+ 373              		.section	.debug_aranges,"",%progbits
+ 374 0000 14000000 		.4byte	0x14
+ 375 0004 0200     		.2byte	0x2
+ 376 0006 00000000 		.4byte	.Ldebug_info0
+ 377 000a 04       		.byte	0x4
+ 378 000b 00       		.byte	0
+ 379 000c 0000     		.2byte	0
+ 380 000e 0000     		.2byte	0
+ 381 0010 00000000 		.4byte	0
+ 382 0014 00000000 		.4byte	0
+ 383              		.section	.debug_line,"",%progbits
+ 384              	.Ldebug_line0:
+ 385 0000 4D000000 		.section	.debug_str,"MS",%progbits,1
+ 385      02004700 
+ 385      00000201 
+ 385      FB0E0D00 
+ 385      01010101 
+ 386              	.LASF6:
+ 387 0000 6C6F6E67 		.ascii	"long long int\000"
+ 387      206C6F6E 
+ 387      6720696E 
+ 387      7400
+ 388              	.LASF25:
+ 389 000e 6D657373 		.ascii	"messageLengthNotChanged\000"
+ 389      6167654C 
+ 389      656E6774 
+ 389      684E6F74 
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 8
+
+
+ 389      4368616E 
+ 390              	.LASF8:
+ 391 0026 756E7369 		.ascii	"unsigned int\000"
+ 391      676E6564 
+ 391      20696E74 
+ 391      00
+ 392              	.LASF1:
+ 393 0033 756E7369 		.ascii	"unsigned char\000"
+ 393      676E6564 
+ 393      20636861 
+ 393      7200
+ 394              	.LASF17:
+ 395 0041 72656365 		.ascii	"received\000"
+ 395      69766564 
+ 395      00
+ 396              	.LASF0:
+ 397 004a 7369676E 		.ascii	"signed char\000"
+ 397      65642063 
+ 397      68617200 
+ 398              	.LASF10:
+ 399 0056 696E7438 		.ascii	"int8\000"
+ 399      00
+ 400              	.LASF28:
+ 401 005b 453A5C50 		.ascii	"E:\\Projects\\EEforEveryone\\2022\\2201_MOTOR\\sw\\"
+ 401      726F6A65 
+ 401      6374735C 
+ 401      4545666F 
+ 401      72457665 
+ 402 0088 345F5053 		.ascii	"4_PSoC\\2201_Motor\\2201_Motor.cydsn\000"
+ 402      6F435C32 
+ 402      3230315F 
+ 402      4D6F746F 
+ 402      725C3232 
+ 403              	.LASF22:
+ 404 00ab 636F696C 		.ascii	"coils\000"
+ 404      7300
+ 405              	.LASF9:
+ 406 00b1 75696E74 		.ascii	"uint8\000"
+ 406      3800
+ 407              	.LASF5:
+ 408 00b7 6C6F6E67 		.ascii	"long unsigned int\000"
+ 408      20756E73 
+ 408      69676E65 
+ 408      6420696E 
+ 408      7400
+ 409              	.LASF7:
+ 410 00c9 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 410      206C6F6E 
+ 410      6720756E 
+ 410      7369676E 
+ 410      65642069 
+ 411              	.LASF24:
+ 412 00e0 6D657373 		.ascii	"messageLength\000"
+ 412      6167654C 
+ 412      656E6774 
+ 412      6800
+ 413              	.LASF26:
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 9
+
+
+ 414 00ee 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 414      43313120 
+ 414      352E342E 
+ 414      31203230 
+ 414      31363036 
+ 415 0121 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m0plus -mthumb -"
+ 415      20726576 
+ 415      6973696F 
+ 415      6E203233 
+ 415      37373135 
+ 416 0154 67202D4F 		.ascii	"g -Og -ffunction-sections -ffat-lto-objects\000"
+ 416      67202D66 
+ 416      66756E63 
+ 416      74696F6E 
+ 416      2D736563 
+ 417              	.LASF13:
+ 418 0180 63686172 		.ascii	"char\000"
+ 418      00
+ 419              	.LASF4:
+ 420 0185 6C6F6E67 		.ascii	"long int\000"
+ 420      20696E74 
+ 420      00
+ 421              	.LASF21:
+ 422 018e 696E7075 		.ascii	"inputReg\000"
+ 422      74526567 
+ 422      00
+ 423              	.LASF14:
+ 424 0197 6C6F6E67 		.ascii	"long double\000"
+ 424      20646F75 
+ 424      626C6500 
+ 425              	.LASF12:
+ 426 01a3 646F7562 		.ascii	"double\000"
+ 426      6C6500
+ 427              	.LASF16:
+ 428 01aa 536C6176 		.ascii	"SlaveAddress\000"
+ 428      65416464 
+ 428      72657373 
+ 428      00
+ 429              	.LASF3:
+ 430 01b7 73686F72 		.ascii	"short unsigned int\000"
+ 430      7420756E 
+ 430      7369676E 
+ 430      65642069 
+ 430      6E7400
+ 431              	.LASF23:
+ 432 01ca 6D6F6462 		.ascii	"modbusMessage\000"
+ 432      75734D65 
+ 432      73736167 
+ 432      6500
+ 433              	.LASF18:
+ 434 01d8 72657370 		.ascii	"response\000"
+ 434      6F6E7365 
+ 434      00
+ 435              	.LASF20:
+ 436 01e1 686F6C64 		.ascii	"holdingReg\000"
+ 436      696E6752 
+ 436      656700
+ARM GAS  C:\Users\Ryan\AppData\Local\Temp\cc2Xc2Vm.s 			page 10
+
+
+ 437              	.LASF19:
+ 438 01ec 696E7075 		.ascii	"inputCoils\000"
+ 438      74436F69 
+ 438      6C7300
+ 439              	.LASF11:
+ 440 01f7 666C6F61 		.ascii	"float\000"
+ 440      7400
+ 441              	.LASF2:
+ 442 01fd 73686F72 		.ascii	"short int\000"
+ 442      7420696E 
+ 442      7400
+ 443              	.LASF27:
+ 444 0207 4D6F6462 		.ascii	"ModbusData.c\000"
+ 444      75734461 
+ 444      74612E63 
+ 444      00
+ 445              	.LASF15:
+ 446 0214 73697A65 		.ascii	"sizetype\000"
+ 446      74797065 
+ 446      00
+ 447              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

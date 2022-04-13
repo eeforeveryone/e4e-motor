@@ -1,0 +1,14 @@
+E:\Projects\EEforEveryone\2022\2201_MOTOR\sw\4_PSoC\2201_Motor\2201_Motor.cydsn\2201_Motor.cyprj|fd818d22-43c9-4e51-adc9-71af56c16b41
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|53deb7bb-6d66-4f33-9a2f-51f2513d1e97
+C:\Users\Ryan\Documents\PSoC Creator\4.4\Downloads ( 4.4).cylib\Downloads ( 4.4).cyprj|0d6aa8db-719e-450e-a0b7-559de48589f9
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|02f47a67-7539-445e-8284-3286ecefb9fc
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|f95cc593-706f-4578-a1cd-280a8199dde1
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|80f4cc0e-f64b-406c-bd5f-41fda544b40f
+E:\Projects\EEforEveryone\2022\2201_MOTOR\sw\4_PSoC\2201_Motor\2202_Stepper.cydsn\2202_Stepper.cyprj|e7d51929-dcad-4ac6-8cb6-f376d435e1e4
+E:\Projects\EEforEveryone\2022\2201_MOTOR\sw\4_PSoC\2201_Motor\2201_MOTOR_BLINK.cydsn\2201_MOTOR_BLINK.cyprj|6b70fb54-28cd-45b6-bea0-fbd3e0e36d89
+E:\Projects\EEforEveryone\2022\2201_MOTOR\sw\4_PSoC\2201_Motor\Interrupts_Example01.cydsn\Interrupts_Example01.cyprj|41db716e-74a4-4c4a-83e1-171dcdb2e3da
+E:\Projects\EEforEveryone\2022\2201_MOTOR\sw\4_PSoC\2201_Motor\PSoC 4ModbusSlave.cydsn\PSoC 4ModbusSlave.cyprj|c602fd8c-93f3-4751-b0b3-7c0ab8eb75ef
+E:\Projects\EEforEveryone\2022\2201_MOTOR\sw\4_PSoC\2201_Motor\SCB_UartComm01.cydsn\SCB_UartComm01.cyprj|e5b603f1-97ed-4fa3-b8fd-434441b9cfb4
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\default\CyReferenceLibrary\CyReferenceLibrary.cylib\CyReferenceLibrary.cyprj|dcbc66e7-5cc3-485f-930c-cea06b136cc8
+E:\Projects\EEforEveryone\2022\2201_MOTOR\sw\4_PSoC\2201_Motor\CE210709_CapSense_demo.cydsn\CE210709_CapSense_demo.cyprj|1b15d13c-279c-4147-8cf9-5a1e8e11308c
+E:\Projects\EEforEveryone\2022\2201_MOTOR\sw\4_PSoC\2201_Motor\CE229521_PSoC4_CapSense_CSD_Slider_Tuning01.cydsn\CE229521_PSoC4_CapSense_CSD_Slider_Tuning01.cyprj|362a597c-993b-4585-a38a-916cea9855a1
